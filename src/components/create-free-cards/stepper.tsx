@@ -11,10 +11,12 @@ const CreateFreeCardsStepperSection = () => {
         <Text
           style={{
             color: "rgb(230, 128, 128)",
-            fontSize: "40px",
+            // fontSize: "40px",
             paddingBottom: '20px',
             fontFamily: '"Paytone One", sans-serif',
           }}
+          fontSize={["24px", "32px", "40px"]}
+
           fontWeight={"bold"}
           className="text-center 
          
@@ -76,10 +78,11 @@ const CreateFreeCardsStepperSection = () => {
                     <Text
                       style={{
                         color: "rgb(109, 106, 106)",
-                        fontSize: "32px",
+                        // fontSize: "32px",
                         fontWeight: "bold",
                         marginLeft: "5px",
                       }}
+                      fontSize={["18px", "24px", "32px"]}
                       fontFamily={'"Quicksand", sans-serif'}
                     >
                       {step}
@@ -89,13 +92,13 @@ const CreateFreeCardsStepperSection = () => {
                   <Box className="min-w-0">
                     <Text
                       fontWeight="bold"
-                      fontSize="md"
+                      fontSize={["12px", "14px", "16px"]}
                       fontFamily={'"Quicksand", sans-serif'}
                     >
                       {steps[step - 1].title}
                     </Text>
                     <Text
-                      fontSize="sm"
+                      fontSize={["12px", "13px", "14px"]}
                       color="gray.700"
                       marginRight='10px'
                       fontFamily={'"Quicksand", sans-serif'}

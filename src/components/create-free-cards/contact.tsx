@@ -7,6 +7,8 @@ import {
   GridItem,
   Image,
   Text,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 
 const CreateFreeCardsContactSection = () => {
@@ -14,15 +16,18 @@ const CreateFreeCardsContactSection = () => {
     <Box
       style={{
         backgroundColor: "rgb(248, 248, 248)",
-      }}>
+      }}
+    >
       <Container
         style={{
           backgroundColor: "rgb(248, 248, 248)",
-        }}>
+        }}
+      >
         <Box
           className="grid gap-4 
             grid-cols-2 grid-rows-2 
-            md:grid-cols-3 md:grid-rows-1">
+            md:grid-cols-3 md:grid-rows-1"
+        >
           <Box className="col-span-2 md:col-span-1  p-4 text-center flex flex-col items-center">
             <Text
               style={{
@@ -32,15 +37,17 @@ const CreateFreeCardsContactSection = () => {
                 color: "rgb(251, 65, 65)",
                 fontSize: "40px",
               }}
-              className="cursor-pointer">
+              className="cursor-pointer"
+            >
               meWedding
             </Text>
-            <Text className="cursor-pointer" fontFamily={'"Quicksand", sans-serif'}>
+            <Text
+              className="cursor-pointer"
+              fontFamily={'"Quicksand", sans-serif'}
+            >
               Giữ hạnh phúc - Kết nối yêu thương
             </Text>
-            <Text className="cursor-pointer mt-3">
-              CÔNG TY TNHH MEHAPPY
-            </Text>
+            <Text className="cursor-pointer mt-3">CÔNG TY TNHH MEHAPPY</Text>
             <Text className="cursor-pointer">Mã số thuế : 0111152872</Text>
             <Flex gap={4} className="mt-4">
               <Circle size="40px" bg="gray.200">
@@ -63,64 +70,84 @@ const CreateFreeCardsContactSection = () => {
               fontWeight={"semibold"}
               fontSize={"md"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer">
+              className="cursor-pointer"
+            >
               | Liên hệ
             </Text>
-          <Text fontSize="sm" className="cursor-pointer" fontFamily='"Quicksand", sans-serif'>
-            Bạn cần tư vấn vui lòng liên hệ với chúng tôi<br />
-             qua các kênh liên hệ phía dưới
-          </Text>
-            <Flex gap={4} className="mt-4">
-              <Circle size="40px" bg="gray.200">
-                <Image src="/facebook.svg" width={"25px"} height={"25px"} />
-              </Circle>
-              <Circle size="40px" bg="gray.200">
-                <Image src="/messenger.svg" width={"30px"} height={"30px"} />
-              </Circle>
-              <Circle size="40px" bg="gray.200">
-                <Image src="/zalo.svg" width={"20px"} height={"20px"} />
-              </Circle>
-              <Circle size="40px" bg="gray.200">
-                <Image src="/tiktok.svg" width={"20px"} height={"20px"} />
-              </Circle>
-            </Flex>
+            <Text
+              fontSize="sm"
+              maxWidth="270px"
+              className="cursor-pointer"
+              fontFamily='"Quicksand", sans-serif'
+            >
+              Bạn cần tư vấn vui lòng liên hệ với chúng tôi qua các kênh liên hệ
+              phía dưới
+            </Text>
+            <Wrap className="mt-4">
+              <WrapItem>
+                <Circle size="40px" bg="gray.200">
+                  <Image src="/facebook.svg" width="25px" height="25px" />
+                </Circle>
+              </WrapItem>
+              <WrapItem>
+                <Circle size="40px" bg="gray.200">
+                  <Image src="/messenger.svg" width="30px" height="30px" />
+                </Circle>
+              </WrapItem>
+              <WrapItem>
+                <Circle size="40px" bg="gray.200">
+                  <Image src="/zalo.svg" width="20px" height="20px" />
+                </Circle>
+              </WrapItem>
+              <WrapItem>
+                <Circle size="40px" bg="gray.200">
+                  <Image src="/tiktok.svg" width="20px" height="20px" />
+                </Circle>
+              </WrapItem>
+            </Wrap>
           </Box>
           <Box className="p-4 flex flex-col gap-3">
             <Text
               fontWeight={"semibold"}
               fontSize={"md"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer">
+              className="cursor-pointer"
+            >
               | meHappy
             </Text>
             <Text
               fontSize={"sm"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer hover:scale-105 transition-transform duration-30">
+              className="cursor-pointer hover:scale-105 transition-transform duration-30"
+            >
               Trang chủ
             </Text>
             <Text
               fontSize={"sm"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer hover:scale-105 transition-transform duration-30">
+              className="cursor-pointer hover:scale-105 transition-transform duration-30"
+            >
               Điều khoản sử dụng
             </Text>
             <Text
               fontSize={"sm"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer hover:scale-105 transition-transform duration-30">
+              className="cursor-pointer hover:scale-105 transition-transform duration-30"
+            >
               Chính sách bảo mật
             </Text>
             <Text
               fontSize={"sm"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer hover:scale-105 transition-transform duration-30">
+              className="cursor-pointer hover:scale-105 transition-transform duration-30"
+            >
               Chăm sóc khách hàng
             </Text>
             <Text
               fontSize={"sm"}
               fontFamily={'"Quicksand", sans-serif'}
-              className="cursor-pointer hover:scale-105 transition-transform duration-30">
+              className="cursor-pointer hover:scale-105 transition-transform duration-30"
+            >
               Thanh toán
             </Text>
           </Box>

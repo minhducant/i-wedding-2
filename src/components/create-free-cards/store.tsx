@@ -14,19 +14,22 @@ const CreateFreeCardsStoreSection = () => {
       <Text
         style={{
           color: "rgb(236, 84, 84)",
-          fontSize: "45px",
+          // fontSize: "45px",
           fontFamily: '"Paytone One", sans-serif',
         }}
         fontWeight={"bold"}
+        fontSize={["24px", "32px", "45px"]}
         className="text-center ">
         KHO GIAO DIỆN CÁC MẪU THIỆP CƯỚI
       </Text>
       <Text
         style={{
-          fontSize: "22px",
+          // fontSize: "22px",
           fontFamily: '"Paytone One", sans-serif',
           color: "rgb(78, 77, 77)",
         }}
+        fontSize={["14px", "18px", "22px"]}
+
         className="text-center mb-10">
         Bắt đầu Đám Cưới của bạn với 1 chiếc Thiệp Cưới thật đẹp ngay nhé
         ♥&nbsp;
