@@ -5,12 +5,14 @@ const CreateFreeCardsStepperSection = () => {
     <Box
       style={{
         backgroundColor: "#fff4f4",
-      }}>
+      }}
+    >
       <Container maxW={"6xl"} className="pt-10 pb-10">
         <Text
           style={{
             color: "rgb(230, 128, 128)",
             fontSize: "40px",
+            paddingBottom: '20px',
             fontFamily: '"Paytone One", sans-serif',
           }}
           fontWeight={"bold"}
@@ -18,12 +20,15 @@ const CreateFreeCardsStepperSection = () => {
          
           "
           fontFamily={'"Paytone One", sans-serif'}
-          >
+        >
           4 BƯỚC ĐỂ TẠO THIỆP CƯỚI ĐIỆN TỬ MIỄN PHÍ
         </Text>
-        <Box className="flex flex-col md:flex-row gap-8 px-4" alignItems="center">
+        <Box
+          className="flex flex-col md:flex-row gap-8 px-4"
+          alignItems="center"
+        >
           {/* Cột trái: Các bước */}
-          <Box className="w-full md:w-1/2 flex flex-col gap-4 pt-10">
+          <Box className="w-full md:w-2/5 flex flex-col gap-4 pt-0">
             {[1, 2, 3, 4].map((step) => {
               const steps = [
                 {
@@ -42,14 +47,14 @@ const CreateFreeCardsStepperSection = () => {
                   title: "HOÀN THÀNH VÀ MỜI KHÁCH",
                   desc: "Sau khi chỉnh sửa xong rồi, bấm lưu thiệp. Vậy là đã hoàn thành và bạn có thể gửi mời đến mọi người rồi nhé!",
                 },
-              ]
+              ];
 
               return (
                 <Flex
                   key={step}
                   bg="white"
                   borderRadius="md"
-                  p={4}
+                  p={2}
                   align="center"
                   gap={4}
                   className="shadow-sm"
@@ -82,28 +87,37 @@ const CreateFreeCardsStepperSection = () => {
                   </Box>
 
                   <Box className="min-w-0">
-                    <Text fontWeight="bold" fontSize="md" fontFamily={'"Quicksand", sans-serif'}>
+                    <Text
+                      fontWeight="bold"
+                      fontSize="md"
+                      fontFamily={'"Quicksand", sans-serif'}
+                    >
                       {steps[step - 1].title}
                     </Text>
-                    <Text fontSize="sm" color="gray.700" fontFamily={'"Quicksand", sans-serif'}>
+                    <Text
+                      fontSize="sm"
+                      color="gray.700"
+                      marginRight='10px'
+                      fontFamily={'"Quicksand", sans-serif'}
+                      textAlign="justify"
+                    >
                       {steps[step - 1].desc}
                     </Text>
                   </Box>
                 </Flex>
-              )
+              );
             })}
           </Box>
 
           {/* Cột phải: Hình ảnh */}
-          <Box className="w-full md:w-1/2 flex justify-center items-center">
+          <Box className="w-full md:w-3/5 flex justify-center items-center">
             <Image
               src="/anh2.png"
               alt="Ảnh minh họa"
-              // className="transform transition-transform duration-300 hover:scale-110 max-w-full h-auto object-contain"
+              className="w-full max-w-[500px] h-auto object-contain"
             />
           </Box>
         </Box>
-
       </Container>
     </Box>
   );

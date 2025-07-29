@@ -154,7 +154,7 @@ const CreateFreeCardsChosenSection = () => {
         id="question-id"
         className="grid gap-4 
                 grid-cols-1 md:grid-cols-12  
-                mt-20 mb-10">
+                mt-15 mb-10">
  <Box className="col-span-12 md:col-span-8 p-4 text-center flex flex-col">
 
           <Text
@@ -171,7 +171,7 @@ const CreateFreeCardsChosenSection = () => {
               style={{
                 backgroundColor: "rgb(232, 117, 117)",
               }}
-              className="py-[3px] w-[120px]"></Box>
+              className="py-[3px] w-[120px] mb-[15px] "></Box>
           </Text>
           <Collapsible.Root
             open={open1}
@@ -185,7 +185,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center">
                 <Text fontWeight={"semibold"}   fontFamily={'"Quicksand", sans-serif'}>
                   Website đám cưới, thiệp cưới điện tử là gì ?
                 </Text>
@@ -223,7 +223,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center">
                 <Text fontWeight={"semibold"} className="max-w-[500px]"   fontFamily={'"Quicksand", sans-serif'}>
                   Tôi cần chuẩn bị những gì để bắt đầu có 1 chiếc thiệp cưới ?
                 </Text>
@@ -255,7 +255,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center">
                 <Text fontWeight={"semibold"}   fontFamily={'"Quicksand", sans-serif'}>
                   Ý nghĩa của Website thiệp cưới này là gì ?
                 </Text>
@@ -293,7 +293,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center ">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center ">
                 <Text fontWeight={"semibold"} className="max-w-[600px]"   fontFamily={'"Quicksand", sans-serif'}>
                   Tôi có thể thay đổi thiết kế hoặc thông tin thiệp cưới sau khi
                   nó đã hoàn thành và đã bàn giao không ?
@@ -327,7 +327,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center">
                 <Text fontWeight={"semibold"} className="max-w-[600px]"   fontFamily={'"Quicksand", sans-serif'}>
                   Tự thiết kế thiệp này có dễ không, tôi không rành về máy tính
                 </Text>
@@ -359,7 +359,7 @@ const CreateFreeCardsChosenSection = () => {
                 style={{
                   backgroundColor: "rgb(255, 226, 226)",
                 }}
-                className="text-left cursor-pointer px-8 py-3 flex justify-between items-center">
+                className="text-left cursor-pointer px-8 py-2 flex justify-between items-center">
                 <Text fontWeight={"semibold"} className="max-w-[400px]"   fontFamily={'"Quicksand", sans-serif'}>
                   Tôi có thể gửi thiệp cho bao nhiêu người ?
                 </Text>
