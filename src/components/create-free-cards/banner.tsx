@@ -28,7 +28,7 @@ const CreateFreeCardsBannerSection = () => {
       if (charIndex <= fullWord.length) {
         setCurrentWord(fullWord.slice(0, charIndex));
         charIndex++;
-        timeout = setTimeout(typeChar, 100); // tốc độ gõ
+        timeout = setTimeout(typeChar, 150); // tốc độ gõ
       } else {
         // Sau khi gõ xong từ hiện tại → chờ rồi gõ từ mới
         timeout = setTimeout(() => {

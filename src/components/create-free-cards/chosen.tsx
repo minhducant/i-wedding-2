@@ -155,7 +155,8 @@ const CreateFreeCardsChosenSection = () => {
         className="grid gap-4 
                 grid-cols-1 md:grid-cols-12  
                 mt-15 mb-10">
- <Box className="col-span-12 md:col-span-8 p-4 text-center flex flex-col">
+<Box className="col-span-12 md:col-span-7 p-4 text-center flex flex-col">
+
 
           <Text
             style={{
