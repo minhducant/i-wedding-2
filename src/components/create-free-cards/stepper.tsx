@@ -82,7 +82,7 @@ const CreateFreeCardsStepperSection = () => {
                         fontWeight: "bold",
                         marginLeft: "5px",
                       }}
-                      fontSize={["18px", "24px", "32px"]}
+                      fontSize={["24px", "24px", "32px"]}
                       fontFamily={'"Quicksand", sans-serif'}
                     >
                       {step}
@@ -92,7 +92,7 @@ const CreateFreeCardsStepperSection = () => {
                   <Box className="min-w-0">
                     <Text
                       fontWeight="bold"
-                      fontSize={["12px", "14px", "16px"]}
+                      fontSize={["13px", "14px", "16px"]}
                       fontFamily={'"Quicksand", sans-serif'}
                     >
                       {steps[step - 1].title}

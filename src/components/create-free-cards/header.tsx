@@ -44,12 +44,14 @@ const CreateFreeCardsHeader = () => {
             <Text
               onClick={handleScrollToCard}
               fontWeight="semibold"
+              fontFamily={'"Quicksand", sans-serif'}
               className="hidden md:inline cursor-pointer hover:text-red-600">
               Mẫu Thiệp
             </Text>
             <Text
               onClick={handleScrollToQuestion}
               fontWeight="semibold"
+              fontFamily={'"Quicksand", sans-serif'}
               className="hidden md:inline cursor-pointer hover:text-red-600">
               Liên hệ
             </Text>
@@ -58,6 +60,8 @@ const CreateFreeCardsHeader = () => {
               color="white"
               borderRadius="2xl"
               height={8}
+                  fontWeight="semibold"
+              fontFamily={'"Quicksand", sans-serif'}
               _hover={{ bg: "red.600" }}>
               Đăng nhập
             </Button>
@@ -72,12 +76,14 @@ const CreateFreeCardsHeader = () => {
                       <Popover.Title
                         onClick={handleScrollToCard}
                         fontWeight="medium"
+                        fontFamily={'"Quicksand", sans-serif'}
                         className="cursor-pointer hover:text-red-600">
                         Mẫu Thiệp
                       </Popover.Title>
                       <Popover.Title
                         onClick={handleScrollToQuestion}
                         fontWeight="medium"
+                        fontFamily={'"Quicksand", sans-serif'}
                         className="cursor-pointer mt-2 hover:text-red-600">
                         Liên hệ
                       </Popover.Title>

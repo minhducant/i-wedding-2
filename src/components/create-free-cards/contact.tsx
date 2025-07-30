@@ -10,6 +10,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
+import Zalo from '../../assets/icons/zalo'
 
 const CreateFreeCardsContactSection = () => {
   return (
@@ -60,7 +61,7 @@ const CreateFreeCardsContactSection = () => {
                 <Image src="/youtube.svg" width={"25px"} height={"25px"} />
               </Circle>
               <Circle size="40px" bg="gray.200">
-                <Image src="/zalo.svg" width={"20px"} height={"20px"} />
+                <Zalo />
               </Circle>
             </Flex>
           </Box>
@@ -96,7 +97,7 @@ const CreateFreeCardsContactSection = () => {
               </WrapItem>
               <WrapItem>
                 <Circle size="40px" bg="gray.200">
-                  <Image src="/zalo.svg" width="20px" height="20px" />
+                     <Zalo />
                 </Circle>
               </WrapItem>
               <WrapItem>

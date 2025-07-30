@@ -14,13 +14,12 @@ import "./style.css";
 
 const shinyWords = ["ĐIỆN TỬ", "ONLINE"];
 
-
 const CreateFreeCardsBannerSection = () => {
   const [wordIndex, setWordIndex] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
 
-   useEffect(() => {
-    let timeout:any;
+  useEffect(() => {
+    let timeout: any;
     const fullWord = shinyWords[wordIndex];
     let charIndex = 0;
 
@@ -164,6 +163,7 @@ const CreateFreeCardsBannerSection = () => {
                   onClick={handleScrollToCard}
                   variant="outline"
                   bg="white"
+                  color="red.500"
                   borderRadius="full"
                   colorScheme="red"
                   fontWeight="bold"
@@ -219,6 +219,7 @@ const CreateFreeCardsBannerSection = () => {
               className="font-bold text-[#f35151] mb-2 transform transition-transform duration-300"
               fontSize="16px"
               color={"rgb(230, 128, 128)"}
+              textAlign={{ base: "center", md: "left" }}
               fontFamily={'"Montserrat", sans-serif'}
             >
               Giới thiệu
@@ -227,8 +228,9 @@ const CreateFreeCardsBannerSection = () => {
             <Heading
               as="h2"
               className="text-[#f35151] font-bold transform transition-transform duration-300"
-              fontSize={{ base: "xl", md: "2xl" }}
+              fontSize={{ base: "17px", md: "2xl" }}
               fontFamily={"Quicksand, sans-serif"}
+              textAlign={{ base: "center", md: "left" }}
               color={"rgb(255, 92, 92)"}
               mb={4}
             >

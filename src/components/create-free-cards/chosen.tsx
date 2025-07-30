@@ -205,7 +205,7 @@ const CreateFreeCardsChosenSection = () => {
               fontFamily: '"Paytone One", sans-serif',
             }}
             className="w-fit"
-           fontSize={["18px", "24px", "30px"]}
+           fontSize={["23px", "24px", "30px"]}
             fontWeight={"bold"}
           >
             NHỮNG CÂU HỎI THƯỜNG GẶP
