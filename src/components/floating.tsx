@@ -181,7 +181,7 @@ export default function FloatingWidget() {
           borderRadius="md"
           p={4}
           zIndex={9999}
-          w="270px"
+          w={["250px", "270px", "270px"]} 
           className="fixed bottom-[21%] right-[1%]"
           animation={`${
             showPopup ? slideInPopup : slideOutPopup

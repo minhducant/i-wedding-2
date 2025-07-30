@@ -12,15 +12,12 @@ const CreateFreeCardsStepperSection = () => {
           style={{
             color: "rgb(230, 128, 128)",
             // fontSize: "40px",
-            paddingBottom: '20px',
+            paddingBottom: '10px',
             fontFamily: '"Paytone One", sans-serif',
           }}
-          fontSize={["24px", "32px", "40px"]}
-
+          fontSize={["28px", "32px", "40px"]}
           fontWeight={"bold"}
-          className="text-center 
-         
-          "
+          className="text-center"
           fontFamily={'"Paytone One", sans-serif'}
         >
           4 BƯỚC ĐỂ TẠO THIỆP CƯỚI ĐIỆN TỬ MIỄN PHÍ
@@ -98,7 +95,7 @@ const CreateFreeCardsStepperSection = () => {
                       {steps[step - 1].title}
                     </Text>
                     <Text
-                      fontSize={["12px", "13px", "14px"]}
+                      fontSize={["13px", "14px", "14px"]}
                       color="gray.700"
                       marginRight='10px'
                       fontFamily={'"Quicksand", sans-serif'}
@@ -117,7 +114,7 @@ const CreateFreeCardsStepperSection = () => {
             <Image
               src="/anh2.png"
               alt="Ảnh minh họa"
-              className="w-full max-w-[500px] h-auto object-contain"
+              className="w-full max-w-[550px] h-auto object-contain"
             />
           </Box>
         </Box>

@@ -497,7 +497,7 @@ const CreateFreeCardsChosenSection = () => {
           </Collapsible.Root>
         </Box>
         <Box className="col-span-12 md:col-span-4 p-4 text-center flex justify-center items-center">
-          <Image src="/anh3.png" className="max-w-[300px] w-full h-auto" />
+          <Image src="/anh3.png" className="max-w-[600px] w-full h-auto" />
         </Box>
       </Box>
     </Container>
