@@ -1,6 +1,6 @@
 import * as React from "react"
-const SvgComponent = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 50 50">
+const SvgComponent = ({width=24, height=24}:any) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} fill="none" viewBox="0 0 50 50">
     <path
       fill="#0068FF"
       fillRule="evenodd"

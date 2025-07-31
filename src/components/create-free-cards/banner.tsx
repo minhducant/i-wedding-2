@@ -140,20 +140,21 @@ const CreateFreeCardsBannerSection = () => {
                 <span className="text-red-400 font-medium">Đáng Nhớ</span> hơn ♥
               </Text>
 
+              {/* Nút hiển thị trên desktop */}
               <Stack
+                display={{ base: "none", md: "flex" }}
                 mt={6}
-                direction={{ base: "column", sm: "row" }}
-                justify={{ base: "center", md: "flex-start" }}
-                gap={{ base: 3, sm: 5, md: 10 }}
+                direction="row"
+                justify="flex-start"
+                gap={5}
               >
                 <Button
                   onClick={handleScrollToCard}
-                  flex="1"
                   bg="red.500"
                   color="white"
                   borderRadius="full"
-                  width={{ base: "100%", sm: "150px", md: "200px" }}
-                  height={{ base: 5, sm: 9, md: 10 }}
+                  width="200px"
+                  height="40px"
                   fontWeight="bold"
                   _hover={{ bg: "red.600" }}
                 >
@@ -165,12 +166,10 @@ const CreateFreeCardsBannerSection = () => {
                   bg="white"
                   color="red.500"
                   borderRadius="full"
-                  colorScheme="red"
                   fontWeight="bold"
-                  width={{ base: "100%", sm: "250px", md: "200px" }}
-                  height={{ base: 5, sm: 9, md: 10 }}
-                  borderColor={"red.400"}
-                  flex="1"
+                  width="200px"
+                  height="40px"
+                  borderColor="red.400"
                 >
                   XEM CÁC MẪU THIỆP
                 </Button>
@@ -179,7 +178,9 @@ const CreateFreeCardsBannerSection = () => {
 
             <Box
               position="relative"
-              className=" flex justify-center items-center  md:min-w-[660px]"
+              className="flex justify-center items-center md:min-w-[660px]"
+              flexDirection="column"
+              // w="100%"
             >
               <Image
                 src="/anh1.png"
@@ -189,8 +190,45 @@ const CreateFreeCardsBannerSection = () => {
               <Image
                 src="/happy-wedding.png"
                 alt="Phone"
-                className="absolute left-auto md:left-[150px] w-[160px] h-[62px] top-[40px] md:w-[265px] md:h-[97px]"
+                className="absolute right-1/2 translate-x-[40%] top-[70px] md:left-[150px] md:translate-x-0 w-[120px] h-[45px] md:w-[265px] md:h-[97px] md:top-[40px]"
               />
+
+              {/* Nút hiển thị trên mobile, dưới ảnh */}
+              <Stack
+                display={{ base: "flex", md: "none" }}
+                direction="row"
+                justify="center"
+                gap={3}
+                // mt={4}
+                px={5}
+                w="100%"
+              >
+                <Button
+                  onClick={handleScrollToCard}
+                  flex="1"
+                  bg="red.500"
+                  color="white"
+                  fontSize="sm"
+                  borderRadius="full"
+                  fontWeight="bold"
+                  _hover={{ bg: "red.600" }}
+                >
+                  TẠO THIỆP NGAY
+                </Button>
+                <Button
+                  onClick={handleScrollToCard}
+                  flex="1"
+                  variant="outline"
+                  bg="white"
+                  fontSize="sm"
+                  color="red.500"
+                  borderRadius="full"
+                  fontWeight="bold"
+                  borderColor="red.400"
+                >
+                  XEM CÁC MẪU THIỆP
+                </Button>
+              </Stack>
             </Box>
           </Flex>
         </Box>
@@ -206,13 +244,11 @@ const CreateFreeCardsBannerSection = () => {
             rounded="xl"
             maxW="600px"
             w="100%"
-            // textAlign="center" // 👈 căn giữa toàn bộ chữ
             p={{ base: 4, md: 6 }}
-            ml={{ md: -10 }} // tương đương md:ml-[-40px]>
+            ml={{ md: -10 }}
             borderTop="4px solid #f8f8f8"
             borderBottom="4px solid #f8f8f8"
             borderRight="4px solid #f8f8f8"
-            // Border radius responsive
             borderRadius={{ base: "20px", md: "0 20px 20px 0" }}
           >
             <Text

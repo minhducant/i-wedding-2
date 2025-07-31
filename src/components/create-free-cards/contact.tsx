@@ -10,7 +10,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import Zalo from '../../assets/icons/zalo'
+import Zalo from "../../assets/icons/zalo";
 
 const CreateFreeCardsContactSection = () => {
   return (
@@ -48,8 +48,18 @@ const CreateFreeCardsContactSection = () => {
             >
               Giữ hạnh phúc - Kết nối yêu thương
             </Text>
-            <Text className="cursor-pointer mt-3">CÔNG TY TNHH MEHAPPY</Text>
-            <Text className="cursor-pointer">Mã số thuế : 0111152872</Text>
+            <Text
+              className="cursor-pointer mt-3"
+              fontFamily={'"Quicksand", sans-serif'}
+            >
+              CÔNG TY TNHH MEHAPPY
+            </Text>
+            <Text
+              className="cursor-pointer"
+              fontFamily={'"Quicksand", sans-serif'}
+            >
+              Mã số thuế : 0111152872
+            </Text>
             <Flex gap={4} className="mt-4">
               <Circle size="40px" bg="gray.200">
                 <Image src="/facebook.svg" width={"25px"} height={"25px"} />
@@ -76,7 +86,7 @@ const CreateFreeCardsContactSection = () => {
               | Liên hệ
             </Text>
             <Text
-              fontSize="sm"
+              fontSize={["13px", "13px", "14px"]}
               maxWidth="270px"
               className="cursor-pointer"
               fontFamily='"Quicksand", sans-serif'
@@ -86,23 +96,41 @@ const CreateFreeCardsContactSection = () => {
             </Text>
             <Wrap className="mt-4">
               <WrapItem>
-                <Circle size="40px" bg="gray.200">
-                  <Image src="/facebook.svg" width="25px" height="25px" />
+                <Circle
+                  size="32px"
+                  bg="gray.200"
+                  onClick={() =>
+                    window.open("https://fb.com/meweddingg", "_blank")
+                  }
+                >
+                  <Image src="/facebook.svg" width="18px" height="18px" />
                 </Circle>
               </WrapItem>
               <WrapItem>
-                <Circle size="40px" bg="gray.200">
-                  <Image src="/messenger.svg" width="30px" height="30px" />
+                <Circle
+                  size="32px"
+                  bg="gray.200"
+                  onClick={() =>
+                    window.open("https://m.me/meweddingg", "_blank")
+                  }
+                >
+                  <Image src="/messenger.svg" width="20px" height="20px" />
                 </Circle>
               </WrapItem>
               <WrapItem>
-                <Circle size="40px" bg="gray.200">
-                     <Zalo />
+                <Circle
+                  size="32px"
+                  bg="gray.200"
+                  onClick={() =>
+                    window.open("https://zalo.me/0818090333", "_blank")
+                  }
+                >
+                  <Zalo width={18} height={18} />
                 </Circle>
               </WrapItem>
               <WrapItem>
-                <Circle size="40px" bg="gray.200">
-                  <Image src="/tiktok.svg" width="20px" height="20px" />
+                <Circle size="32px" bg="gray.200">
+                  <Image src="/tiktok.svg" width="16px" height="16px" />
                 </Circle>
               </WrapItem>
             </Wrap>
@@ -117,35 +145,35 @@ const CreateFreeCardsContactSection = () => {
               | meHappy
             </Text>
             <Text
-              fontSize={"sm"}
+              fontSize={["13px", "13px", "14px"]}
               fontFamily={'"Quicksand", sans-serif'}
               className="cursor-pointer hover:scale-105 transition-transform duration-30"
             >
               Trang chủ
             </Text>
             <Text
-              fontSize={"sm"}
+              fontSize={["13px", "13px", "14px"]}
               fontFamily={'"Quicksand", sans-serif'}
               className="cursor-pointer hover:scale-105 transition-transform duration-30"
             >
               Điều khoản sử dụng
             </Text>
             <Text
-              fontSize={"sm"}
+              fontSize={["13px", "13px", "14px"]}
               fontFamily={'"Quicksand", sans-serif'}
               className="cursor-pointer hover:scale-105 transition-transform duration-30"
             >
               Chính sách bảo mật
             </Text>
             <Text
-              fontSize={"sm"}
+              fontSize={["13px", "13px", "14px"]}
               fontFamily={'"Quicksand", sans-serif'}
               className="cursor-pointer hover:scale-105 transition-transform duration-30"
             >
               Chăm sóc khách hàng
             </Text>
             <Text
-              fontSize={"sm"}
+              fontSize={["13px", "13px", "14px"]}
               fontFamily={'"Quicksand", sans-serif'}
               className="cursor-pointer hover:scale-105 transition-transform duration-30"
             >
