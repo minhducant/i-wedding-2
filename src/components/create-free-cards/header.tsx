@@ -9,10 +9,18 @@ import {
   UseDisclosureProps,
 } from "@chakra-ui/react";
 import { LuMenu } from "react-icons/lu";
+import { useSelector } from "react-redux";
+import { FiChevronDown } from "react-icons/fi";
+import { selectAuth } from "@/features/auth/authSlice";
 import CreateFreeLoginDialog from "@/components/create-free-cards/login";
 
 const CreateFreeCardsHeader = () => {
   const { open, onOpen, onClose }: UseDisclosureProps = useDisclosure();
+  const auth: any = useSelector(selectAuth);
+
+  console.log("Auth state in header:", auth);
+
+  const isLoggedIn = auth;
 
   const handleScrollToQuestion = () => {
     const e = document.getElementById("question-id");
@@ -64,18 +72,36 @@ const CreateFreeCardsHeader = () => {
               >
                 Liên hệ
               </Text>
-              <Button
-                bg="red.500"
-                color="white"
-                borderRadius="2xl"
-                height={8}
-                onClick={onOpen}
-                fontWeight="semibold"
-                fontFamily={'"Quicksand", sans-serif'}
-                _hover={{ bg: "red.600" }}
-              >
-                Đăng nhập
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  bg="white"
+                  color="black"
+                  borderRadius="3xl"
+                  height={10}
+                  borderColor={"gray.300"}
+                  fontWeight="semibold"
+                  fontFamily={'"Quicksand", sans-serif'}
+                  _hover={{ bg: "red.500", color: "white" }}
+                >
+                  <Box display="flex" alignItems="center" gap={1}>
+                    {auth?.user?.username || "Tài khoản"}
+                    <FiChevronDown />
+                  </Box>
+                </Button>
+              ) : (
+                <Button
+                  bg="red.500"
+                  color="white"
+                  borderRadius="2xl"
+                  height={8}
+                  onClick={onOpen}
+                  fontWeight="semibold"
+                  fontFamily={'"Quicksand", sans-serif'}
+                  _hover={{ bg: "red.600" }}
+                >
+                  Đăng nhập
+                </Button>
+              )}
               <Popover.Root>
                 <Popover.Trigger asChild>
                   <LuMenu className="md:hidden cursor-pointer" size={40} />

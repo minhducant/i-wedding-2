@@ -63,8 +63,8 @@ const CreateFreeCardsBannerSection = () => {
             id="SHAPE6_desktop_gradient"
             gradientTransform="rotate(0)"
           >
-            <stop offset="0%" stop-color="#FFFFFF"></stop>
-            <stop offset="100%" stop-color="#FFF3F3"></stop>
+            <stop offset="0%" stopColor="#FFFFFF"></stop>
+            <stop offset="100%" stopColor="#FFF3F3"></stop>
           </radialGradient>
         </defs>
         <defs>

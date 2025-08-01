@@ -210,7 +210,7 @@ const CreateFreeCardsChosenSection = () => {
           >
             NHỮNG CÂU HỎI THƯỜNG GẶP
             <Box
-              as={"p"}
+              as="div"
               style={{
                 backgroundColor: "rgb(232, 117, 117)",
               }}

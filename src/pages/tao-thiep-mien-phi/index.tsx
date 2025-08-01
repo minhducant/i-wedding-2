@@ -19,7 +19,7 @@ export default function CreateFreeCards() {
         <CreateFreeCardsBannerSection />
         <CreateFreeCardsStepperSection />
         <CreateFreeCardsStoreSection />
-        <CreateFreeCardsChosenSection />
+        {/* <CreateFreeCardsChosenSection /> */}
         <CreateFreeCardsContactSection />
         <CreateFreeCardsFooter />
       </div>
