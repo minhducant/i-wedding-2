@@ -43,7 +43,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
             <App />
-            {/* <Toaster />  */}
+            <Toaster /> 
           </QueryClientProvider>
         </Provider>
       </ChakraProvider>

@@ -1,10 +1,11 @@
 import { Box, Input, Text, Button } from "@chakra-ui/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { keyframes } from "@emotion/react";
 import { FiX, FiArrowLeft } from "react-icons/fi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import { useLogin } from "../../features/auth/authAPI";
-import { toaster } from "../../components/ui/toaster";
+import { useLogin } from "@/features/auth/authAPI";
+import { toaster } from "@/components/ui/toaster";
 
 const CreateFreeLoginDialog = ({
   isOpen,
@@ -16,11 +17,32 @@ const CreateFreeLoginDialog = ({
   const loginMutation = useLogin();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const registerEmailRef = useRef<HTMLInputElement>(null);
+  const registerUsernameRef = useRef<HTMLInputElement>(null);
+  const registerPasswordRef = useRef<HTMLInputElement>(null);
+  const registerConfirmPasswordRef = useRef<HTMLInputElement>(null);
+  const forgotEmailRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [formType, setFormType] = useState<"login" | "register" | "forgot">(
     "login"
   );
 
+  useEffect(() => {
+    if (isOpen) {
+      setFormType("login");
+      setShowPassword(false);
+    }
+  }, [isOpen]);
+
+  const slideIn = keyframes`
+  0% { transform: translate(-50%, -60%) scale(0.95); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+`;
+
+  const slideOut = keyframes`
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -30%) scale(0.95); opacity: 0; }
+`;
   const handleTogglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmitLogin = async (e: React.FormEvent) => {
@@ -42,6 +64,10 @@ const CreateFreeLoginDialog = ({
       });
     }
   };
+
+  const handleSubmitRegister = (e: React.FormEvent) => {};
+
+  const handleSubmitForgot = (e: React.FormEvent) => {};
 
   if (!isOpen) return null;
 
@@ -69,8 +95,9 @@ const CreateFreeLoginDialog = ({
         p={6}
         width="90%"
         maxW="400px"
-        minHeight={"370px"}
+        h="auto"
         onClick={(e) => e.stopPropagation()}
+        animation={`${isOpen ? slideIn : slideOut} 0.3s ease-in-out`}
       >
         {formType === "login" && (
           <form onSubmit={handleSubmitLogin}>
@@ -194,18 +221,14 @@ const CreateFreeLoginDialog = ({
           </form>
         )}
         {formType === "register" && (
-          <Box>
+          <form onSubmit={handleSubmitRegister}>
             <Box
               mb={4}
-              justifyContent="space-between"
               display="flex"
+              justifyContent="space-between"
               alignItems="center"
             >
-              <Text
-                fontSize="2xl"
-                fontWeight="bold"
-                fontFamily={'"Quicksand", sans-serif'}
-              >
+              <Text fontSize="2xl" fontWeight="bold" fontFamily="Quicksand">
                 Đăng ký
               </Text>
               <Box
@@ -217,28 +240,79 @@ const CreateFreeLoginDialog = ({
                 <FiArrowLeft size={24} />
               </Box>
             </Box>
-            <Text
-              mb={2}
-              fontFamily={'"Quicksand", sans-serif'}
-              textAlign={"center"}
-            >
-              Chức năng đăng ký tạm thời không khả dụng.
+            <Text mb={1} fontFamily={'"Quicksand", sans-serif'} pb="5px">
+              Địa chỉ email{" "}
+              <Text as="span" color="red.500" fontWeight={"bold"}>
+                *
+              </Text>
             </Text>
-          </Box>
+            <Input
+              ref={registerEmailRef}
+              required
+              placeholder="Email"
+              mb={3}
+              bg="#F5EEED"
+              borderRadius="xl"
+              type="email"
+              fontFamily="Quicksand"
+              fontSize={["14px", "14px", "15px"]}
+            />
+            <Text mb={1} fontFamily={'"Quicksand", sans-serif'} pb="5px">
+              Mật khẩu{" "}
+              <Text as="span" color="red.500" fontWeight={"bold"}>
+                *
+              </Text>
+            </Text>
+            <Input
+              ref={registerPasswordRef}
+              required
+              placeholder="Mật khẩu"
+              mb={3}
+              bg="#F5EEED"
+              borderRadius="xl"
+              type="password"
+              fontFamily="Quicksand"
+              fontSize={["14px", "14px", "15px"]}
+            />
+            <Text mb={1} fontFamily={'"Quicksand", sans-serif'} pb="5px">
+              Xác nhận mật khẩu{" "}
+              <Text as="span" color="red.500" fontWeight={"bold"}>
+                *
+              </Text>
+            </Text>
+            <Input
+              ref={registerConfirmPasswordRef}
+              required
+              placeholder="Nhập lại mật khẩu"
+              mb={4}
+              bg="#F5EEED"
+              borderRadius="xl"
+              type="password"
+              fontFamily="Quicksand"
+              fontSize={["14px", "14px", "15px"]}
+            />
+            <Button
+              type="submit"
+              width="full"
+              bg="red.500"
+              color="white"
+              borderRadius="xl"
+              fontWeight="bold"
+              _hover={{ bg: "red.600" }}
+            >
+              Đăng ký
+            </Button>
+          </form>
         )}
         {formType === "forgot" && (
-          <Box>
+          <form onSubmit={handleSubmitForgot}>
             <Box
               mb={4}
-              justifyContent="space-between"
               display="flex"
+              justifyContent="space-between"
               alignItems="center"
             >
-              <Text
-                fontSize="2xl"
-                fontWeight="bold"
-                fontFamily={'"Quicksand", sans-serif'}
-              >
+              <Text fontSize="2xl" fontWeight="bold" fontFamily="Quicksand">
                 Quên mật khẩu
               </Text>
               <Box
@@ -252,12 +326,36 @@ const CreateFreeLoginDialog = ({
             </Box>
             <Text
               mb={2}
-              fontFamily={'"Quicksand", sans-serif'}
+              fontFamily="Quicksand"
               textAlign={"center"}
+              fontSize={["14px", "14px", "14px"]}
             >
-              Chức năng lấy lại mật khẩu tạm thời không khả dụng.
+              Nhập địa chỉ email của bạn để khôi phục mật khẩu:
             </Text>
-          </Box>
+            <Input
+              ref={forgotEmailRef}
+              required
+              placeholder="Nhập email"
+              mb={4}
+              bg="#F5EEED"
+              borderRadius="xl"
+              type="email"
+              fontFamily="Quicksand"
+              fontSize={["14px", "14px", "15px"]}
+              _focus={{ borderColor: "red.500" }}
+            />
+            <Button
+              type="submit"
+              width="full"
+              bg="red.500"
+              color="white"
+              borderRadius="xl"
+              fontWeight="bold"
+              _hover={{ bg: "red.600" }}
+            >
+              Gửi liên kết khôi phục
+            </Button>
+          </form>
         )}
       </Box>
     </>

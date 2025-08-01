@@ -18,7 +18,7 @@ const CreateFreeCardsChosenSection = () => {
           fontFamily: '"Paytone One", sans-serif',
         }}
         fontWeight={"bold"}
-       fontSize={["18px", "24px", "30px"]}
+        fontSize={["18px", "24px", "30px"]}
         className="text-center transform transition-transform duration-300 hover:scale-110"
       >
         TẠI SAO NÊN LỰA CHỌN
@@ -198,15 +198,14 @@ const CreateFreeCardsChosenSection = () => {
                 mt-15 mb-10"
       >
         <Box className="col-span-12 md:col-span-7 p-4 text-center flex flex-col">
-          <Text
+          <Box
             style={{
               color: "rgb(232, 117, 117)",
-              // fontSize: "30px",
               fontFamily: '"Paytone One", sans-serif',
             }}
             className="w-fit"
-           fontSize={["23px", "24px", "30px"]}
-            fontWeight={"bold"}
+            fontSize={["23px", "24px", "30px"]}
+            fontWeight="bold"
           >
             NHỮNG CÂU HỎI THƯỜNG GẶP
             <Box
@@ -214,9 +213,9 @@ const CreateFreeCardsChosenSection = () => {
               style={{
                 backgroundColor: "rgb(232, 117, 117)",
               }}
-              className="py-[3px] w-[120px] mb-[15px] "
-            ></Box>
-          </Text>
+              className="py-[3px] w-[120px] mb-[15px]"
+            />
+          </Box>
           <Collapsible.Root
             open={open1}
             onOpenChange={(value) => setOpen1(value.open)}
