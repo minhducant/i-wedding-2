@@ -1,6 +1,5 @@
 import {
   Box,
-  Table,
   Text,
   Button,
   HStack,
@@ -9,13 +8,15 @@ import {
   Spinner,
   useBreakpointValue,
   createListCollection,
+  Portal,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FiX, FiCheck } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
 import { FaGift } from "react-icons/fa6";
 import { FaPencil } from "react-icons/fa6";
+import { FiMoreVertical } from "react-icons/fi";
 import { TbWorld, TbWorldOff } from "react-icons/tb";
 import { BsArrowRepeat } from "react-icons/bs";
 
@@ -50,11 +51,6 @@ const ModalInvitation = ({
       setLoading(true);
       const response = await apiClient.get("/pages/me");
       setInvitations(response.data.data);
-      toaster.create({
-        title: "Thiệp cưới đã được tải",
-        description: "Danh sách thiệp cưới đã được cập nhật.",
-        type: "success",
-      });
     } catch (error) {
       toaster.create({
         title: "Lỗi khi tải thiệp cưới",
@@ -66,6 +62,21 @@ const ModalInvitation = ({
       setLoading(false);
     }
   };
+
+  const filteredInvitations = useMemo(() => {
+    switch (selected) {
+      case "published":
+        return invitations.filter((item: any) => item?.isPublished);
+      case "unpublished":
+        return invitations.filter((item: any) => !item?.isPublished);
+      case "draft":
+        return invitations.filter((item: any) => item?.status === "draft");
+      case "completed":
+        return invitations.filter((item: any) => item?.status === "completed");
+      default:
+        return invitations;
+    }
+  }, [selected, invitations]);
 
   const iconList = [
     { icon: FaUsers, label: "Quản lý người dùng" },
@@ -84,41 +95,25 @@ const ModalInvitation = ({
     { value: "draft", label: "Bản nháp" },
     { value: "completed", label: "Hoàn thành" },
   ];
+  const filtersMobile = createListCollection({
+    items: filters,
+  });
 
   return (
     <Box onClick={onClose} className="fixed inset-0 bg-transparent z-[100001]">
       <Box
-        position="fixed"
-        top="50%"
-        left="50%"
+        className="
+          fixed top-1/2 left-1/2
+          bg-white rounded-2xl shadow-xl z-[100001]
+          w-full min-h-[80vh]
+          max-w-[95%] sm:max-w-[90%] md:max-w-[85%]
+        "
         transform="translate(-50%, -50%)"
-        bg="white"
-        borderRadius="2xl"
-        boxShadow="xl"
-        zIndex={100001}
-        width="100%"
-        minH={["80vh", "80vh", "80vh"]}
-        maxW={["95%", "90%", "85%"]}
         onClick={(e) => e.stopPropagation()}
         animation={`${slideIn} 0.3s ease-in-out`}
       >
-        <Box
-          p={6}
-          display="flex"
-          alignItems="center"
-          borderTopLeftRadius={"2xl"}
-          borderTopRightRadius={"2xl"}
-          bg="linear-gradient(to right, #FF5C5C, #FFA3A3)"
-        >
-          <Box
-            cursor="pointer"
-            color="white"
-            borderRadius="16px"
-            bg="#FF8D8D"
-            p="12px"
-            mr="16px"
-            fontSize={["20px", "24px", "30px"]}
-          >
+        <Box className="p-6 flex items-center rounded-t-2xl bg-gradient-to-r from-[#FF5C5C] to-[#FFA3A3]">
+          <Box className="cursor-pointer text-white rounded-[16px] bg-[#FF8D8D] p-3 mr-4 text-[20px] sm:text-[24px] md:text-[30px]">
             <FaGift />
           </Box>
           <Box color="white" fontFamily={'"Quicksand", sans-serif'}>
@@ -165,7 +160,7 @@ const ModalInvitation = ({
                 label: "Chưa xuất bản",
                 value: invitations?.filter((item: any) => !item?.isPublished)
                   .length,
-                icon: <TbWorldOff/>,
+                icon: <TbWorldOff />,
                 color: "red.500",
                 bg: "#ffe5e5",
               },
@@ -181,36 +176,22 @@ const ModalInvitation = ({
             ].map((item, idx) => (
               <Box
                 key={idx}
-                bg={item.bg}
-                borderRadius="lg"
-                textAlign="center"
-                py={4}
-                px={1}
-                fontSize="sm"
+                className="rounded-lg text-center py-4 px-1 text-sm"
+                style={{ backgroundColor: item.bg }}
               >
                 <Box
-                  fontSize="20px"
                   color={item.color}
-                  mb={1}
-                  display="flex"
-                  justifyContent="center"
+                  className="text-[20px] mb-1 flex justify-center"
                 >
                   {item.icon}
                 </Box>
                 <Text
-                  fontSize="lg"
-                  fontWeight="bold"
                   color={item.color}
-                  fontFamily={'"Quicksand", sans-serif'}
+                  className="text-lg font-bold font-[Quicksand,sans-serif]"
                 >
                   {item.value}
                 </Text>
-                <Text
-                  color="gray.600"
-                  fontSize={"14px"}
-                  fontFamily={'"Quicksand", sans-serif'}
-                  pt={1}
-                >
+                <Text className="text-gray-600 text-[14px] pt-1 font-[Quicksand,sans-serif]">
                   {item.label}
                 </Text>
               </Box>
@@ -219,33 +200,64 @@ const ModalInvitation = ({
         </Box>
         <Box my={6} px={4}>
           <HStack align="center">
-            <Text fontWeight="medium" fontFamily={'"Quicksand", sans-serif'}>
+            <Text className="font-medium font-[Quicksand,sans-serif]">
               Bộ lọc:
             </Text>
-            <HStack align="center">
-              {filters.map((filter) => (
-                <Button
-                  key={filter.value}
-                  size="sm"
-                  variant="solid"
-                  borderRadius="xl"
-                  fontFamily={'"Quicksand", sans-serif'}
-                  onClick={() => setSelected(filter.value)}
-                  colorScheme={filter.value === selected ? "red" : "gray"}
-                  fontWeight={filter.value === selected ? "bold" : "medium"}
-                  bg={filter.value === selected ? "red.400" : "gray.100"}
-                  color={filter.value === selected ? "white" : "gray.600"}
-                  _hover={{
-                    bg: filter.value === selected ? "red.500" : "gray.200",
-                  }}
-                >
-                  {filter.label}
-                </Button>
-              ))}
-            </HStack>
+            {isDesktop ? (
+              <HStack align="center">
+                {filters.map((filter) => (
+                  <Button
+                    key={filter.value}
+                    size="sm"
+                    variant="solid"
+                    borderRadius="xl"
+                    fontFamily={'"Quicksand", sans-serif'}
+                    onClick={() => setSelected(filter.value)}
+                    colorScheme={filter.value === selected ? "red" : "gray"}
+                    fontWeight={filter.value === selected ? "bold" : "medium"}
+                    bg={filter.value === selected ? "red.400" : "gray.100"}
+                    color={filter.value === selected ? "white" : "gray.600"}
+                    _hover={{
+                      bg: filter.value === selected ? "red.500" : "gray.200",
+                    }}
+                  >
+                    {filter.label}
+                  </Button>
+                ))}
+              </HStack>
+            ) : (
+              <Select.Root
+                collection={filtersMobile}
+                size="sm"
+                width="83%"
+                fontFamily={'"Quicksand", sans-serif'}
+              >
+                <Select.HiddenSelect />
+                <Select.Control>
+                  <Select.Trigger>
+                    <Select.ValueText placeholder="Select framework" />
+                  </Select.Trigger>
+                  <Select.IndicatorGroup>
+                    <Select.Indicator />
+                  </Select.IndicatorGroup>
+                </Select.Control>
+                <Portal>
+                  <Select.Positioner>
+                    <Select.Content>
+                      {filtersMobile.items.map((framework) => (
+                        <Select.Item item={framework} key={framework.value}>
+                          {framework.label}
+                          <Select.ItemIndicator />
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Positioner>
+                </Portal>
+              </Select.Root>
+            )}
           </HStack>
         </Box>
-        <HStack wrap="wrap" p={4} pt={0}>
+        {/* <HStack wrap="wrap" p={4} pt={0}>
           <Box
             display="flex"
             gap={4}
@@ -257,34 +269,45 @@ const ModalInvitation = ({
             {loading ? (
               <Box w="100%" textAlign="center" pt={5} justifyContent={"center"}>
                 <Spinner size="lg" color="red.500" />
-                <Text
-                  mt={4}
-                  color="gray.600"
-                  fontSize={["12px", "13px", "14px"]}
-                  fontFamily={'"Quicksand", sans-serif'}
-                >
+                <Text className="mt-4 text-gray-600 text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif]">
                   Đang tải thiệp cưới...
                 </Text>
               </Box>
-            ) : invitations?.length === 0 ? (
-              <Box w="100%" textAlign="center" py={10}>
-                <Text fontSize="lg" color="gray.600">
-                  Không có thiệp cưới nào được tìm thấy.
-                </Text>
+            ) : filteredInvitations?.length === 0 ? (
+              <Box className="w-full text-center py-10 text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif] text-gray-600">
+                Không có thiệp cưới nào được tìm thấy.
               </Box>
             ) : (
-              invitations?.map((item: any, idx: any) => (
+              filteredInvitations?.map((item: any, idx: any) => (
                 <Box
                   key={idx}
                   border="1px solid"
                   borderColor="gray.200"
                   borderRadius="lg"
-                  p={4}
                   w="100%"
                   maxW="400px"
-                  bg="white"
+                  bg="#FEF8F7"
                   boxShadow="md"
                 >
+                  <Box className="p-3 flex items-center rounded-t-2xl">
+                    <Box className="cursor-pointer text-white rounded-[10px] bg-[#FFA3A3] p-2 mr-2 text-[14px] sm:text-[14px] md:text-[18px]">
+                      <FaGift />
+                    </Box>
+                    <Box fontFamily={'"Quicksand", sans-serif'}>
+                      <Text
+                        fontSize={["12px", "13px", "14px"]}
+                        fontWeight="bold"
+                      >
+                        {item.title}
+                      </Text>
+                      <Text fontSize={["12px", "13px", "14px"]}>
+                        {item.status}
+                      </Text>
+                    </Box>
+                    <Box className="cursor-pointer text-white rounded-[10px] bg-[#FFA3A3] p-2 hover:text-red-500 text-[14px] sm:text-[14px] md:text-[18px] ml-auto">
+                      <FiMoreVertical />
+                    </Box>
+                  </Box>
                   <Text fontWeight="bold" fontSize="lg" mb={1}>
                     {item.title}
                   </Text>
@@ -332,7 +355,7 @@ const ModalInvitation = ({
               ))
             )}
           </Box>
-        </HStack>
+        </HStack> */}
       </Box>
     </Box>
   );
