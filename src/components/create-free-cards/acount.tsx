@@ -57,118 +57,81 @@ const AccountPopover = () => {
     }
   };
 
+  const actions = [
+    {
+      icon: FiUser,
+      title: "Quản lý tài khoản",
+      desc: "Thông tin cá nhân",
+      bg: "#E0E7FF",
+      color: "#3B49DF",
+    },
+    {
+      icon: FiCalendar,
+      title: "Quản lý thiệp cưới",
+      desc: "Thiệp của bạn",
+      bg: "#FFE8E8",
+      color: "#E03B3B",
+      onClick: onOpenInvitation,
+    },
+    {
+      icon: FiFileText,
+      title: "Quản lý khách mời",
+      desc: "Danh sách khách mời",
+      bg: "#FFF4E5",
+      color: "#F59E0B",
+      onClick: onOpenGuest,
+    },
+    {
+      icon: FiSettings,
+      title: "Cài đặt",
+      desc: "Tùy chỉnh ứng dụng",
+      bg: "#E6F4EA",
+      color: "#38A169",
+    },
+  ];
+
   return (
     <>
       <ModalGuest open={openGuest} onClose={onCloseGuest} />
       <ModalInvitation open={openInvitation} onClose={onCloseInvitation} />
       <Popover.Root>
-        <Popover.Trigger>
-          <Button
-            bg="#F6F6F6"
-            color="black"
-            borderRadius="3xl"
-            height={10}
-            borderColor={"gray.300"}
-            fontWeight="semibold"
-            fontFamily={'"Quicksand", sans-serif'}
-            _hover={{ bg: "red.400", color: "white" }}
+        <Popover.Trigger asChild>
+          <Box
+            as="button"
+            className="bg-[#F6F6F6] text-black rounded-3xl h-[40px] border border-gray-300 font-semibold px-[12px] flex items-center gap-2 hover:bg-red-400 hover:text-white font-[Quicksand,sans-serif]"
           >
-            <Box display="flex" alignItems="center" gap={1}>
-              <Avatar />
-              <Text ml="5px">{auth?.user?.username || "Tài khoản"}</Text>
-              <FiChevronDown />
-            </Box>
-          </Button>
+            <Avatar />
+            <Text ml="5px">{auth?.user?.username || "Tài khoản"}</Text>
+            <FiChevronDown />
+          </Box>
         </Popover.Trigger>
         <Portal>
           <Popover.Positioner>
-            <Popover.Content
-              w="280px"
-              borderRadius="xl"
-              boxShadow="xl"
-              overflow="hidden"
-              _focus={{ outline: "none" }}
-            >
-              <Box
-                bg="linear-gradient(to bottom, #FF6B6B, #FF8787)"
-                py={4}
-                px={4}
-                textAlign="center"
-              >
-                <Box display="flex" justifyContent="center" mb={2}>
+            <Popover.Content className="!w-[280px] rounded-xl shadow-xl overflow-hidden focus:outline-none">
+              <Box className="bg-gradient-to-b from-[#FF6B6B] to-[#FF8787] py-4 px-4 text-center font-[Quicksand,sans-serif]">
+                <Box className="flex justify-center mb-2">
                   <Avatar size={40} />
                 </Box>
-                <Text
-                  color="white"
-                  fontWeight="medium"
-                  fontFamily={'"Quicksand", sans-serif'}
-                >
-                  Xin chào 👋
-                </Text>
-                <Text
-                  color="white"
-                  fontWeight="bold"
-                  fontFamily={'"Quicksand", sans-serif'}
-                >
+                <Text className="text-white font-medium">Xin chào 👋</Text>
+                <Text className="text-white font-bold">
                   {auth?.user?.username || "Tài khoản"}
                 </Text>
-                <Text
-                  color="white"
-                  fontSize="sm"
-                  fontFamily={'"Quicksand", sans-serif'}
-                >
+                <Text className="text-white text-sm">
                   @{auth?.user?.username?.toLowerCase() || "admin"}
                 </Text>
               </Box>
               <VStack align="stretch" px={4} py={2} bg="white">
-                {[
-                  {
-                    icon: FiUser,
-                    title: "Quản lý tài khoản",
-                    desc: "Thông tin cá nhân",
-                    bg: "#E0E7FF",
-                    color: "#3B49DF",
-                  },
-                  {
-                    icon: FiCalendar,
-                    title: "Quản lý thiệp cưới",
-                    desc: "Thiệp của bạn",
-                    bg: "#FFE8E8",
-                    color: "#E03B3B",
-                    onClick: onOpenInvitation,
-                  },
-                  {
-                    icon: FiFileText,
-                    title: "Quản lý khách mời",
-                    desc: "Danh sách khách mời",
-                    bg: "#FFF4E5",
-                    color: "#F59E0B",
-                    onClick: onOpenGuest,
-                  },
-                  {
-                    icon: FiSettings,
-                    title: "Cài đặt",
-                    desc: "Tùy chỉnh ứng dụng",
-                    bg: "#E6F4EA",
-                    color: "#38A169",
-                  },
-                ].map((item, index) => (
+                {actions.map((item, index) => (
                   <Box
                     key={index}
-                    px={2}
-                    py={2}
-                    borderRadius="md"
-                    onClick={
+                    className="px-2 py-2 rounded-md"
+                    onClick={() =>
                       item.onClick
-                        ? () => {
-                            item.onClick?.();
-                            // onClosePopover();
-                          }
-                        : () =>
-                            toaster.create({
-                              title: "Chức năng này chưa được triển khai",
-                              type: "info",
-                            })
+                        ? item.onClick?.()
+                        : toaster.create({
+                            title: "Chức năng này chưa được triển khai",
+                            type: "info",
+                          })
                     }
                     _hover={{ bg: "gray.100", cursor: "pointer" }}
                   >
@@ -176,28 +139,15 @@ const AccountPopover = () => {
                       <Box
                         bg={item.bg}
                         border={`1px solid ${item.bg}`}
-                        borderRadius="10px"
-                        p={1.5}
-                        mr={"10px"}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
+                        className="rounded-[10px] p-[6px] mr-[10px] flex items-center justify-center"
                       >
                         <Icon as={item.icon} boxSize={4.5} color={item.color} />
                       </Box>
-                      <Box>
-                        <Text
-                          fontWeight="bold"
-                          fontSize={["13px", "13px", "15px"]}
-                          fontFamily={'"Quicksand", sans-serif'}
-                        >
+                      <Box className="font-[Quicksand,sans-serif]">
+                        <Text className="font-bold text-[13px] md:text-[15px]">
                           {item.title}
                         </Text>
-                        <Text
-                          fontSize={["13px", "13px", "13px"]}
-                          color="gray.500"
-                          fontFamily={'"Quicksand", sans-serif'}
-                        >
+                        <Text className="text-[13px] text-gray-500">
                           {item.desc}
                         </Text>
                       </Box>
@@ -205,8 +155,8 @@ const AccountPopover = () => {
                   </Box>
                 ))}
               </VStack>
-              <Box h="1px" bg="gray.200" mx={5} my={1} />
-              <Box px={4} py={3} bg="white">
+              <Box className="h-px bg-gray-200 mx-5 my-1" />
+              <Box className="px-4 py-3 bg-white">
                 <Button
                   w="full"
                   bg="red.50"

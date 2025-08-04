@@ -3,24 +3,28 @@ import {
   Text,
   Button,
   HStack,
-  Badge,
   Select,
   Spinner,
+  Portal,
+  Link,
+  Menu,
   useBreakpointValue,
   createListCollection,
-  Portal,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import { keyframes } from "@emotion/react";
-import { useState, useEffect, useMemo } from "react";
-import { FiX, FiCheck } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
-import { FaGift } from "react-icons/fa6";
-import { FaPencil } from "react-icons/fa6";
-import { FiMoreVertical } from "react-icons/fi";
-import { TbWorld, TbWorldOff } from "react-icons/tb";
+import { CiLink } from "react-icons/ci";
 import { BsArrowRepeat } from "react-icons/bs";
+import { FaPencil, FaGift } from "react-icons/fa6";
+import { IoLink } from "react-icons/io5";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FiMoreVertical, FiX } from "react-icons/fi";
+import { TbWorld, TbWorldOff } from "react-icons/tb";
+import { useState, useEffect, useMemo } from "react";
 
 import apiClient from "@/api/apiClient";
+import getTimeDiff from "@/utils/timeSince";
 import { toaster } from "@/components/ui/toaster";
 
 const slideIn = keyframes`
@@ -39,7 +43,7 @@ const ModalInvitation = ({
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState("all");
+  const [selected, setSelected] = useState<any>("all");
   const [invitations, setInvitations] = useState<any>([]);
 
   useEffect(() => {
@@ -95,9 +99,148 @@ const ModalInvitation = ({
     { value: "draft", label: "Bản nháp" },
     { value: "completed", label: "Hoàn thành" },
   ];
+
   const filtersMobile = createListCollection({
     items: filters,
   });
+
+  const headerAction = [
+    {
+      label: "Tổng số thiệp",
+      value: invitations.length,
+      icon: <FaGift />,
+      color: "red.400",
+      bg: "#ffe5e5",
+    },
+    {
+      label: "Đã xuất bản",
+      value: invitations?.filter((item: any) => item?.isPublished).length,
+      icon: <TbWorld />,
+      color: "#912828",
+      bg: "#f1eaea",
+    },
+    {
+      label: "Chưa xuất bản",
+      value: invitations?.filter((item: any) => !item?.isPublished).length,
+      icon: <TbWorldOff />,
+      color: "red.500",
+      bg: "#ffe5e5",
+    },
+    {
+      label: "Bản nháp",
+      value: invitations?.filter((item: any) => item?.status === "draft")
+        .length,
+      icon: <FaPencil />,
+      color: "olive",
+      bg: "#f1ebe6",
+    },
+  ];
+
+  const InvitationCard = ({ item, key }: { item: any; key: number }) => {
+    const time = getTimeDiff(item.date);
+
+    return (
+      <Box
+        key={key}
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="lg"
+        w="100%"
+        maxW="400px"
+        bg="#FEF8F7"
+        boxShadow="md"
+      >
+        <Box className="p-3 flex items-center rounded-t-2xl">
+          <Box className="cursor-pointer text-white rounded-[10px] bg-[#F1DEDD] p-2 mr-3 text-[14px] sm:text-[14px] md:text-[18px]">
+            <FaGift className="text-red-500" />
+          </Box>
+          <Box fontFamily={'"Quicksand", sans-serif'}>
+            <Text fontSize={["14px", "13px", "16px"]} fontWeight="bold">
+              {item.title}
+            </Text>
+            <Text fontSize={["12px", "13px", "14px"]}>{item.status}</Text>
+          </Box>
+          <Menu.Root>
+            <Menu.Trigger asChild>
+              <Box className="cursor-pointer text-black rounded-[10px] bg-[#F1DEDD] p-2 hover:text-red-500 text-[14px] sm:text-[14px] md:text-[18px] ml-auto">
+                <FiMoreVertical />
+              </Box>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>
+                  <Menu.Item value="new-txt">New Text File</Menu.Item>
+                  <Menu.Item value="new-file">New File...</Menu.Item>
+                  <Menu.Item value="new-win">New Window</Menu.Item>
+                  <Menu.Item value="open-file">Open File...</Menu.Item>
+                  <Menu.Item value="export">Export</Menu.Item>
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
+        </Box>
+        <Box className="flex bg-white p-3 rounded-md mx-3 border border-gray-300 flex flex-row items-center font-[Quicksand] font-bold">
+          <Box className="flex-1 text-right">
+            <Text>Chú rể</Text>
+            <Text>{item.groom}</Text>
+          </Box>
+          <Box></Box>
+          <Box className="flex-1">
+            <Text>Cô dâu</Text>
+            <Text>{item.bride}</Text>
+          </Box>
+        </Box>
+        <Link
+          href={item.domain}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 text-green-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center color-green focus:outline-none"
+        >
+          <IoLink className="text-green-600" />
+          <Text className="ml-3 text-green-600">{item.domain}</Text>
+        </Link>
+        <Box className="px-4 pt-1 text-blue-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center color-bluefocus:outline-none">
+          <FaCalendarAlt className="text-blue-600" />
+          <Text className="ml-3 text-blue-600">
+            {dayjs(item.date).format("DD/MM/YYYY HH:mm")}
+          </Text>
+        </Box>
+        <Box className="px-4 pt-1 text-blue-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center color-bluefocus:outline-none">
+          <FaCalendarAlt
+            className={!item.isPublished ? "text-red-500" : "text-green-500"}
+          />
+          <Text
+            color={!item.isPublished ? "red.500" : "green.500"}
+            className="ml-3"
+          >
+            {!item.isPublished ? "Chưa xuất bản" : "Đã xuất bản"}
+          </Text>
+        </Box>
+        <Box className="mt-4 bg-[#FFF5F5] p-3 rounded-md mx-3 border border-[#FBC4C4] text-[#FB7185] flex flex-col items-center font-[Quicksand] font-bold">
+          ❤︎ Cưới được ❤︎
+          <Text fontWeight="bold" mt={2}>
+            {time.days} <span style={{ fontSize: "0.7em" }}>Ngày</span>{" "}
+            {time.hours} <span style={{ fontSize: "0.7em" }}>Giờ</span>{" "}
+            {time.minutes} <span style={{ fontSize: "0.7em" }}>Phút</span>
+          </Text>
+        </Box>
+        <Box className="hidden md:flex mt-6 mb-4 flex-row justify-evenly">
+          <Button
+            onClick={() => {}}
+            className="!bg-red-500 !rounded-[12px] !w-[45%] !h-[35px] !font-semibold !text-[14px] !md:text-[13px] !font-[Quicksand] !hover:bg-red-600 !transition-colors !duration-200"
+          >
+            Chỉnh sửa
+          </Button>
+          <Button
+            onClick={() => {}}
+            className="!bg-white !text-red-500 !border !border-red-400 !rounded-[12px] !font-semibold !w-[45%] !h-[35px] !text-[13px] !md:text-[14px] !font-[Quicksand] !hover:bg-red-50 !transition-colors !duration-200"
+          >
+            {!item.isPublished ? "Xuất bản" : "Xem"}
+          </Button>
+        </Box>
+      </Box>
+    );
+  };
 
   return (
     <Box onClick={onClose} className="fixed inset-0 bg-transparent z-[100001]">
@@ -123,7 +266,7 @@ const ModalInvitation = ({
             <Text fontSize={["sm", "md", "lg"]}>Tất cả thiệp cưới của bạn</Text>
           </Box>
           <Box display="flex" gap={3} ml="auto">
-            {iconList.map(({ icon: Icon, onClick, label }, index) => (
+            {iconList.map(({ icon: Icon, onClick }, index) => (
               <Box
                 key={index}
                 onClick={onClick}
@@ -140,40 +283,7 @@ const ModalInvitation = ({
             gridTemplateColumns={["repeat(4, 1fr)", "repeat(4, 1fr)"]}
             gap={3}
           >
-            {[
-              {
-                label: "Tổng số thiệp",
-                value: invitations.length,
-                icon: <FaGift />,
-                color: "red.400",
-                bg: "#ffe5e5",
-              },
-              {
-                label: "Đã xuất bản",
-                value: invitations?.filter((item: any) => item?.isPublished)
-                  .length,
-                icon: <TbWorld />,
-                color: "#912828",
-                bg: "#f1eaea",
-              },
-              {
-                label: "Chưa xuất bản",
-                value: invitations?.filter((item: any) => !item?.isPublished)
-                  .length,
-                icon: <TbWorldOff />,
-                color: "red.500",
-                bg: "#ffe5e5",
-              },
-              {
-                label: "Bản nháp",
-                value: invitations?.filter(
-                  (item: any) => item?.status === "draft"
-                ).length,
-                icon: <FaPencil />,
-                color: "olive",
-                bg: "#f1ebe6",
-              },
-            ].map((item, idx) => (
+            {headerAction.map((item, idx) => (
               <Box
                 key={idx}
                 className="rounded-lg text-center py-4 px-1 text-sm"
@@ -230,21 +340,24 @@ const ModalInvitation = ({
                 collection={filtersMobile}
                 size="sm"
                 width="83%"
+                value={selected}
+                defaultValue={["all"]}
+                onValueChange={(val) => setSelected(val)}
                 fontFamily={'"Quicksand", sans-serif'}
               >
                 <Select.HiddenSelect />
                 <Select.Control>
                   <Select.Trigger>
-                    <Select.ValueText placeholder="Select framework" />
+                    <Select.ValueText placeholder="Chọn bộ lọc" />
                   </Select.Trigger>
                   <Select.IndicatorGroup>
                     <Select.Indicator />
                   </Select.IndicatorGroup>
                 </Select.Control>
                 <Portal>
-                  <Select.Positioner>
+                  <Select.Positioner zIndex={100002}>
                     <Select.Content>
-                      {filtersMobile.items.map((framework) => (
+                      {filters.map((framework) => (
                         <Select.Item item={framework} key={framework.value}>
                           {framework.label}
                           <Select.ItemIndicator />
@@ -257,7 +370,7 @@ const ModalInvitation = ({
             )}
           </HStack>
         </Box>
-        {/* <HStack wrap="wrap" p={4} pt={0}>
+        <HStack wrap="wrap" p={4} pt={0}>
           <Box
             display="flex"
             gap={4}
@@ -279,83 +392,11 @@ const ModalInvitation = ({
               </Box>
             ) : (
               filteredInvitations?.map((item: any, idx: any) => (
-                <Box
-                  key={idx}
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="lg"
-                  w="100%"
-                  maxW="400px"
-                  bg="#FEF8F7"
-                  boxShadow="md"
-                >
-                  <Box className="p-3 flex items-center rounded-t-2xl">
-                    <Box className="cursor-pointer text-white rounded-[10px] bg-[#FFA3A3] p-2 mr-2 text-[14px] sm:text-[14px] md:text-[18px]">
-                      <FaGift />
-                    </Box>
-                    <Box fontFamily={'"Quicksand", sans-serif'}>
-                      <Text
-                        fontSize={["12px", "13px", "14px"]}
-                        fontWeight="bold"
-                      >
-                        {item.title}
-                      </Text>
-                      <Text fontSize={["12px", "13px", "14px"]}>
-                        {item.status}
-                      </Text>
-                    </Box>
-                    <Box className="cursor-pointer text-white rounded-[10px] bg-[#FFA3A3] p-2 hover:text-red-500 text-[14px] sm:text-[14px] md:text-[18px] ml-auto">
-                      <FiMoreVertical />
-                    </Box>
-                  </Box>
-                  <Text fontWeight="bold" fontSize="lg" mb={1}>
-                    {item.title}
-                  </Text>
-
-                  <Text fontSize="sm">
-                    👰 {item.bride} & 🤵 {item.groom}
-                  </Text>
-                  <Text color="green.500" fontSize="sm" mt={2}>
-                    🔗{" "}
-                    <a href={item.link} target="_blank">
-                      {item.link}
-                    </a>
-                  </Text>
-                  <HStack mt={2} color="gray.600" fontSize="sm">
-                    <Text>{item.datetime}</Text>
-                  </HStack>
-                  <Badge
-                    mt={1}
-                    colorScheme={
-                      item.status === "Đã xuất bản" ? "green" : "orange"
-                    }
-                  >
-                    {item.status}
-                  </Badge>
-
-                  <Box
-                    mt={3}
-                    bg="gray.100"
-                    p={2}
-                    borderRadius="md"
-                    fontSize="sm"
-                  >
-                    ❤️ Cưới được: {item.countdown}
-                  </Box>
-
-                  <HStack mt={3}>
-                    <Button size="sm" colorScheme="red">
-                      Chỉnh sửa
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      {item.status === "Đã xuất bản" ? "Xem" : "Xuất bản"}
-                    </Button>
-                  </HStack>
-                </Box>
+                <InvitationCard key={idx} item={item} />
               ))
             )}
           </Box>
-        </HStack> */}
+        </HStack>
       </Box>
     </Box>
   );

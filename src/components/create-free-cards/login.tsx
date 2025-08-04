@@ -73,16 +73,7 @@ const CreateFreeLoginDialog = ({
 
   return (
     <>
-      <Box
-        position="fixed"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        bg="blackAlpha.600"
-        zIndex={100001}
-        onClick={onClose}
-      />
+      <Box onClick={onClose} className="fixed inset-0 bg-black/60 z-[100001]" />
       <Box
         position="fixed"
         top="50%"
@@ -101,118 +92,71 @@ const CreateFreeLoginDialog = ({
       >
         {formType === "login" && (
           <form onSubmit={handleSubmitLogin}>
-            <Box
-              mb={4}
-              justifyContent="space-between"
-              display="flex"
-              alignItems="center"
-            >
-              <Text
-                fontSize="2xl"
-                fontWeight="bold"
-                fontFamily={'"Quicksand", sans-serif'}
-              >
+            <Box className="mb-4 flex justify-between items-center">
+              <Text className="text-2xl font-bold font-[Quicksand]">
                 Đăng nhập
               </Text>
               <Box
-                cursor="pointer"
                 onClick={onClose}
-                color="gray.600"
-                _hover={{ color: "red.500" }}
+                className="cursor-pointer text-gray-600 hover:text-red-500"
               >
                 <FiX size={24} />
               </Box>
             </Box>
-            <Box mb={3} borderRadius="xl" pb="10px">
-              <Text mb={1} fontFamily={'"Quicksand", sans-serif'} pb="5px">
+            <Box className="mb-3 rounded-xl pb-[10px]">
+              <Text className="mb-1 pb-[5px] font-[Quicksand]">
                 Địa chỉ email{" "}
-                <Text as="span" color="red.500" fontWeight={"bold"}>
+                <Text as="span" className="text-red-500 font-bold">
                   *
                 </Text>
               </Text>
               <Input
                 required
-                bg="#F5EEED"
-                borderRadius="xl"
                 autoComplete="off"
                 placeholder="Nhập địa chỉ email"
-                fontFamily={'"Quicksand", sans-serif'}
                 ref={usernameRef}
-                _focus={{
-                  borderColor: "red.600",
-                }}
+                className="bg-[#F5EEED] !rounded-xl border border-gray-300 font-[Quicksand] focus:border-red-600 focus:outline-none"
               />
             </Box>
-            <Box mb={3} pb="10px" position="relative">
-              <Text mb={1} fontFamily={'"Quicksand", sans-serif'} pb="5px">
+            <Box className="mb-3 pb-[10px] relative">
+              <Text className="mb-1 pb-[5px] font-[Quicksand]">
                 Mật khẩu{" "}
-                <Text as="span" color="red.500" fontWeight={"bold"}>
+                <Text as="span" className="text-red-500 font-bold">
                   *
                 </Text>
               </Text>
               <Input
                 required
                 type={showPassword ? "text" : "password"}
-                bg="#F5EEED"
-                borderRadius="xl"
                 autoComplete="off"
                 placeholder="Nhập mật khẩu"
                 ref={passwordRef}
-                fontFamily={'"Quicksand", sans-serif'}
-                pr="40px"
-                _focus={{ borderColor: "red.600" }}
+                className="bg-[#F5EEED] !rounded-xl font-[Quicksand] pr-[40px] focus:border-red-600"
               />
               <Box
-                position="absolute"
-                top="44px"
-                right="12px"
-                cursor="pointer"
-                color="gray.600"
                 onClick={handleTogglePassword}
+                className="absolute top-[44px] right-[12px] cursor-pointer text-gray-600"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </Box>
             </Box>
             <Box display="flex" justifyContent="space-between" mb={4}>
               <Text
-                color="red.500"
-                cursor="pointer"
-                fontSize={["14px", "14px", "15px"]}
-                fontFamily={'"Quicksand", sans-serif'}
                 onClick={() => setFormType("register")}
-                _hover={{
-                  fontWeight: "bold",
-                  color: "red.600",
-                  transform: "scale(1.05)",
-                }}
+                className="text-red-500 cursor-pointer text-[14px] md:text-[15px] font-[Quicksand] hover:text-red-600 hover:font-bold hover:scale-[1.05] transition-transform duration-200"
               >
                 Chưa có tài khoản
               </Text>
               <Text
-                color="red.500"
-                cursor="pointer"
-                fontSize={["14px", "14px", "15px"]}
-                fontFamily={'"Quicksand", sans-serif'}
                 onClick={() => setFormType("forgot")}
-                _hover={{
-                  fontWeight: "bold",
-                  color: "red.600",
-                  transform: "scale(1.05)",
-                }}
+                className="text-red-500 cursor-pointer text-[14px] md:text-[15px] font-[Quicksand] hover:text-red-600 hover:font-bold hover:scale-[1.05] transition-transform duration-200"
               >
                 Quên mật khẩu
               </Text>
             </Box>
             <Button
               type="submit"
-              width="full"
-              bg="red.500"
-              color="white"
-              borderRadius="xl"
-              fontWeight={"bold"}
-              fontSize={["14px", "14px", "16px"]}
-              fontFamily={'"Quicksand", sans-serif'}
-              _hover={{ bg: "red.600" }}
+              className="!w-full !bg-red-500 !text-white !rounded-xl !font-bold !text-[16px] md:text-[14px] !font-[Quicksand] !hover:bg-red-600 !transition-colors duration-200"
               loading={loginMutation.isPending}
               loadingText="Đang đăng nhập"
             >
