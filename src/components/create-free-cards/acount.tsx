@@ -93,7 +93,7 @@ const AccountPopover = () => {
   return (
     <>
       <ModalGuest open={openGuest} onClose={onCloseGuest} />
-      <ModalInvitation open={openInvitation} onClose={onCloseInvitation} />
+      <ModalInvitation open={openInvitation} onClose={onCloseInvitation} onOpenGuest={onOpenGuest}/>
       <Popover.Root>
         <Popover.Trigger asChild>
           <Box

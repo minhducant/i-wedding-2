@@ -49,13 +49,12 @@ const ModalGuest = ({
   const fetchGuest = async (type?: string) => {
     try {
       setLoading(true);
-      const response = await apiClient.get("/guests");
-      setGuest(response.data.data.data);
-      toaster.create({
-        title: "Danh sách khách mời đã được tải",
-        description: "Bạn có thể xem và quản lý danh sách khách mời.",
-        type: "success",
+      const response = await apiClient.get("/guests", {
+        params: {
+          guestOf: type || "both",
+        },
       });
+      setGuest(response.data.data.data);
     } catch (error) {
       toaster.create({
         title: "Lỗi khi tải danh sách khách mời",
@@ -77,48 +76,52 @@ const ModalGuest = ({
     { icon: FiX, label: "Đóng", onClick: onClose },
   ];
 
-  const filters = [
-    { value: "all", label: "Tất cả" },
-    { value: "published", label: "Đã xuất bản" },
-    { value: "unpublished", label: "Chưa xuất bản" },
-    { value: "draft", label: "Bản nháp" },
-    { value: "completed", label: "Hoàn thành" },
+  const headerAction = [
+    {
+      label: "Tổng số khách",
+      value: guest.length,
+      icon: <FaGift />,
+      color: "red.400",
+      bg: "#ffe5e5",
+    },
+    {
+      label: "Tổng tham gia",
+      value: guest.length,
+      icon: <TbWorld />,
+      color: "#912828",
+      bg: "#f1eaea",
+    },
+    {
+      label: "Khách nhà Trai",
+      value: guest?.filter((item: any) => item?.guestOf === "Groom").length,
+      icon: <TbWorldOff />,
+      color: "red.500",
+      bg: "#ffe5e5",
+    },
+    {
+      label: "Khách nhà gái",
+      value: guest?.filter((item: any) => item?.guestOf === "Bride").length,
+      icon: <FaPencil />,
+      color: "olive",
+      bg: "#f1ebe6",
+    },
   ];
 
   return (
     <Box onClick={onClose} className="fixed inset-0 bg-transparent z-[100001]">
       <Box
-        position="fixed"
-        top="50%"
-        left="50%"
+        className="
+          fixed top-1/2 left-1/2
+          w-full min-h-[75vh] sm:min-h-[85vh]
+          max-w-[95%] sm:max-w-[90%] md:max-w-[85%]
+          bg-white rounded-2xl shadow-xl z-[100001]
+        "
         transform="translate(-50%, -50%)"
-        bg="white"
-        borderRadius="2xl"
-        boxShadow="xl"
-        zIndex={100001}
-        width="100%"
-        minH={["80vh", "80vh", "80vh"]}
-        maxW={["95%", "90%", "85%"]}
         onClick={(e) => e.stopPropagation()}
         animation={`${slideIn} 0.3s ease-in-out`}
       >
-        <Box
-          p={6}
-          display="flex"
-          alignItems="center"
-          borderTopLeftRadius={"2xl"}
-          borderTopRightRadius={"2xl"}
-          bg="linear-gradient(to right, #FF5C5C, #FFA3A3)"
-        >
-          <Box
-            cursor="pointer"
-            color="white"
-            borderRadius="16px"
-            bg="#FF8D8D"
-            p="12px"
-            mr="16px"
-            fontSize={["20px", "24px", "30px"]}
-          >
+        <Box className="p-6 flex items-center rounded-t-2xl bg-gradient-to-r from-[#FF5C5C] to-[#FFA3A3]">
+          <Box className="cursor-pointer text-white rounded-[16px] bg-[#FF8D8D] p-3 mr-4 text-[20px] sm:text-[24px] md:text-[30px]">
             <FaGift />
           </Box>
           <Box color="white" fontFamily={'"Quicksand", sans-serif'}>
@@ -147,102 +150,30 @@ const ModalGuest = ({
             gridTemplateColumns={["repeat(4, 1fr)", "repeat(4, 1fr)"]}
             gap={3}
           >
-            {[
-              {
-                label: "Tổng số thiệp",
-                value: guest.length,
-                icon: <FaGift />,
-                color: "red.400",
-                bg: "#ffe5e5",
-              },
-              {
-                label: "Đã xuất bản",
-                value: guest?.filter((item: any) => item?.isPublished).length,
-                icon: <TbWorld />,
-                color: "#912828",
-                bg: "#f1eaea",
-              },
-              {
-                label: "Chưa xuất bản",
-                value: guest?.filter((item: any) => !item?.isPublished).length,
-                icon: <TbWorldOff />,
-                color: "red.500",
-                bg: "#ffe5e5",
-              },
-              {
-                label: "Bản nháp",
-                value: guest?.filter((item: any) => item?.status === "draft")
-                  .length,
-                icon: <FaPencil />,
-                color: "olive",
-                bg: "#f1ebe6",
-              },
-            ].map((item, idx) => (
+            {headerAction.map((item, idx) => (
               <Box
                 key={idx}
-                bg={item.bg}
-                borderRadius="lg"
-                textAlign="center"
-                py={4}
-                px={1}
-                fontSize="sm"
+                className="rounded-lg text-center py-4 px-1 text-sm"
+                style={{ backgroundColor: item.bg }}
               >
                 <Box
-                  fontSize="20px"
                   color={item.color}
-                  mb={1}
-                  display="flex"
-                  justifyContent="center"
+                  className="text-[20px] mb-1 flex justify-center"
                 >
                   {item.icon}
                 </Box>
                 <Text
-                  fontSize="lg"
-                  fontWeight="bold"
                   color={item.color}
-                  fontFamily={'"Quicksand", sans-serif'}
+                  className="text-lg font-bold font-[Quicksand,sans-serif]"
                 >
                   {item.value}
                 </Text>
-                <Text
-                  color="gray.600"
-                  fontSize={"14px"}
-                  fontFamily={'"Quicksand", sans-serif'}
-                  pt={1}
-                >
+                <Text className="text-gray-600 text-[14px] pt-1 font-[Quicksand,sans-serif]">
                   {item.label}
                 </Text>
               </Box>
             ))}
           </Box>
-        </Box>
-        <Box my={6} px={4}>
-          <HStack align="center">
-            <Text fontWeight="medium" fontFamily={'"Quicksand", sans-serif'}>
-              Bộ lọc:
-            </Text>
-            <HStack align="center">
-              {filters.map((filter) => (
-                <Button
-                  key={filter.value}
-                  size="sm"
-                  variant="solid"
-                  borderRadius="xl"
-                  fontFamily={'"Quicksand", sans-serif'}
-                  onClick={() => setSelected(filter.value)}
-                  colorScheme={filter.value === selected ? "red" : "gray"}
-                  fontWeight={filter.value === selected ? "bold" : "medium"}
-                  bg={filter.value === selected ? "red.400" : "gray.100"}
-                  color={filter.value === selected ? "white" : "gray.600"}
-                  _hover={{
-                    bg: filter.value === selected ? "red.500" : "gray.200",
-                  }}
-                >
-                  {filter.label}
-                </Button>
-              ))}
-            </HStack>
-          </HStack>
         </Box>
         <HStack wrap="wrap" p={4} pt={0}>
           <Box
@@ -254,81 +185,39 @@ const ModalGuest = ({
             whiteSpace="nowrap"
           >
             {loading ? (
-              <Box w="100%" textAlign="center" pt={5} justifyContent={"center"}>
+              <Box className="w-full text-center pt-5 justify-center min-h-[350px]">
                 <Spinner size="lg" color="red.500" />
-                <Text
-                  mt={4}
-                  color="gray.600"
-                  fontSize={["12px", "13px", "14px"]}
-                  fontFamily={'"Quicksand", sans-serif'}
-                >
+                <Text className="mt-4 text-gray-600 text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif]">
                   Đang tải danh sách khách mời...
                 </Text>
               </Box>
             ) : guest?.length === 0 ? (
-              <Box w="100%" textAlign="center" py={10}>
-                <Text fontSize="lg" color="gray.600">
-                  Không có khách mời nào được tìm thấy.
-                </Text>
+              <Box
+                className="w-full flex mt-6 justify-center text-center text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif] text-gray-600"
+                minH="350px"
+              >
+                Không có khách mời nào được tìm thấy.
               </Box>
             ) : (
-              guest?.map((item: any, idx: any) => (
-                <Box
-                  key={idx}
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="lg"
-                  p={4}
-                  w="100%"
-                  maxW="400px"
-                  bg="white"
-                  boxShadow="md"
-                >
-                  <Text fontWeight="bold" fontSize="lg" mb={1}>
-                    {item.title}
-                  </Text>
-
-                  <Text fontSize="sm">
-                    👰 {item.bride} & 🤵 {item.groom}
-                  </Text>
-                  <Text color="green.500" fontSize="sm" mt={2}>
-                    🔗{" "}
-                    <a href={item.link} target="_blank">
-                      {item.link}
-                    </a>
-                  </Text>
-                  <HStack mt={2} color="gray.600" fontSize="sm">
-                    <Text>{item.datetime}</Text>
-                  </HStack>
-                  <Badge
-                    mt={1}
-                    colorScheme={
-                      item.status === "Đã xuất bản" ? "green" : "orange"
-                    }
-                  >
-                    {item.status}
-                  </Badge>
-
-                  <Box
-                    mt={3}
-                    bg="gray.100"
-                    p={2}
-                    borderRadius="md"
-                    fontSize="sm"
-                  >
-                    ❤️ Cưới được: {item.countdown}
-                  </Box>
-
-                  <HStack mt={3}>
-                    <Button size="sm" colorScheme="red">
-                      Chỉnh sửa
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      {item.status === "Đã xuất bản" ? "Xem" : "Xuất bản"}
-                    </Button>
-                  </HStack>
-                </Box>
-              ))
+              <Box>
+                {isDesktop ? (
+                  <Table.Root size="sm">
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.ColumnHeader>Tên</Table.ColumnHeader>
+                        <Table.ColumnHeader>Số điện thoại</Table.ColumnHeader>
+                        <Table.ColumnHeader>Email</Table.ColumnHeader>
+                        <Table.ColumnHeader>Khách của</Table.ColumnHeader>
+                        <Table.ColumnHeader>Số người</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end"></Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body></Table.Body>
+                  </Table.Root>
+                ) : (
+                  <Box></Box>
+                )}
+              </Box>
             )}
           </Box>
         </HStack>

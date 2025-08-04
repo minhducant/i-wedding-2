@@ -1,30 +1,29 @@
 import {
   Box,
   Text,
+  Popover,
   Button,
   HStack,
   Select,
   Spinner,
   Portal,
-  Link,
-  Menu,
   useBreakpointValue,
   createListCollection,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { keyframes } from "@emotion/react";
-import { FaUsers } from "react-icons/fa";
-import { CiLink } from "react-icons/ci";
+import { IoLink } from "react-icons/io5";
 import { BsArrowRepeat } from "react-icons/bs";
 import { FaPencil, FaGift } from "react-icons/fa6";
-import { IoLink } from "react-icons/io5";
-import { FaCalendarAlt } from "react-icons/fa";
 import { FiMoreVertical, FiX } from "react-icons/fi";
 import { TbWorld, TbWorldOff } from "react-icons/tb";
 import { useState, useEffect, useMemo } from "react";
+import { FaCalendarAlt, FaUsers } from "react-icons/fa";
 
 import apiClient from "@/api/apiClient";
 import getTimeDiff from "@/utils/timeSince";
+import GroomIcon from "@/assets/icons/groom";
+import BrideIcon from "@/assets/icons/bride";
 import { toaster } from "@/components/ui/toaster";
 
 const slideIn = keyframes`
@@ -35,12 +34,13 @@ const slideIn = keyframes`
 const ModalInvitation = ({
   open,
   onClose,
+  onOpenGuest,
 }: {
   open: boolean;
   onClose: () => void;
+  onOpenGuest?: () => void;
 }) => {
   if (!open) return null;
-
   const isDesktop = useBreakpointValue({ base: false, md: true });
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<any>("all");
@@ -50,6 +50,10 @@ const ModalInvitation = ({
     fetchInvitations();
   }, []);
 
+  const openGuestModal = async () => {
+    onClose?.();
+    onOpenGuest?.();
+  };
   const fetchInvitations = async (type?: string) => {
     try {
       setLoading(true);
@@ -83,7 +87,7 @@ const ModalInvitation = ({
   }, [selected, invitations]);
 
   const iconList = [
-    { icon: FaUsers, label: "Quản lý người dùng" },
+    { icon: FaUsers, label: "Quản lý người dùng", onClick: openGuestModal },
     {
       icon: BsArrowRepeat,
       label: "Làm mới dữ liệu",
@@ -142,13 +146,7 @@ const ModalInvitation = ({
     return (
       <Box
         key={key}
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="lg"
-        w="100%"
-        maxW="400px"
-        bg="#FEF8F7"
-        boxShadow="md"
+        className="w-full md:w-[400px] border border-gray-200 rounded-lg bg-[#FEF8F7] shadow-md mb-5 md:mb-0"
       >
         <Box className="p-3 flex items-center rounded-t-2xl">
           <Box className="cursor-pointer text-white rounded-[10px] bg-[#F1DEDD] p-2 mr-3 text-[14px] sm:text-[14px] md:text-[18px]">
@@ -158,47 +156,54 @@ const ModalInvitation = ({
             <Text fontSize={["14px", "13px", "16px"]} fontWeight="bold">
               {item.title}
             </Text>
-            <Text fontSize={["12px", "13px", "14px"]}>{item.status}</Text>
+            <Box
+              fontSize={["10px", "10px", "12px"]}
+              color={item.status !== "draft" ? "green.500" : "gray.500"}
+            >
+              {item.status !== "draft" ? "Hoàn thành" : "Bản nháp"}
+            </Box>
           </Box>
-          <Menu.Root>
-            <Menu.Trigger asChild>
+          <Popover.Root>
+            <Popover.Trigger asChild>
               <Box className="cursor-pointer text-black rounded-[10px] bg-[#F1DEDD] p-2 hover:text-red-500 text-[14px] sm:text-[14px] md:text-[18px] ml-auto">
                 <FiMoreVertical />
               </Box>
-            </Menu.Trigger>
+            </Popover.Trigger>
             <Portal>
-              <Menu.Positioner>
-                <Menu.Content>
-                  <Menu.Item value="new-txt">New Text File</Menu.Item>
-                  <Menu.Item value="new-file">New File...</Menu.Item>
-                  <Menu.Item value="new-win">New Window</Menu.Item>
-                  <Menu.Item value="open-file">Open File...</Menu.Item>
-                  <Menu.Item value="export">Export</Menu.Item>
-                </Menu.Content>
-              </Menu.Positioner>
+              <Popover.Positioner>
+                <Popover.Content className="!w-[280px] rounded-xl shadow-xl overflow-hidden focus:outline-none">
+                  <Text>Đức</Text>
+                </Popover.Content>
+              </Popover.Positioner>
             </Portal>
-          </Menu.Root>
+          </Popover.Root>
         </Box>
-        <Box className="flex bg-white p-3 rounded-md mx-3 border border-gray-300 flex flex-row items-center font-[Quicksand] font-bold">
-          <Box className="flex-1 text-right">
-            <Text>Chú rể</Text>
-            <Text>{item.groom}</Text>
+        <Box className="flex bg-white p-2 rounded-md mx-3 border border-gray-300 flex flex-row items-center font-[Quicksand] font-bold text-[14px] sm:text-[16px] md:text-[14px]]">
+          <Box className="flex-1 text-right flex items-center flex-row justify-end">
+            <Box className="text-right mr-2">
+              <Text className="font-medium text-[12px]">Chú rể</Text>
+              <Text>{item.groom}</Text>
+            </Box>
+            <GroomIcon />
           </Box>
-          <Box></Box>
-          <Box className="flex-1">
-            <Text>Cô dâu</Text>
-            <Text>{item.bride}</Text>
+          <Text className="font-bold text-red-500 text-[25px] mx-2">❤︎</Text>
+          <Box className="flex-1 text-right flex items-center flex-row">
+            <BrideIcon />
+            <Box className="text-left ml-2">
+              <Text className="font-medium text-[12px]">Cô dâu</Text>
+              <Text>{item.bride}</Text>
+            </Box>
           </Box>
         </Box>
-        <Link
-          href={item.domain}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 text-green-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center color-green focus:outline-none"
-        >
+        <Box className="cursor-pointer px-4 pt-2 text-green-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center focus:outline-none">
           <IoLink className="text-green-600" />
-          <Text className="ml-3 text-green-600">{item.domain}</Text>
-        </Link>
+          <Text
+            className="ml-3 text-green-600"
+            onClick={() => window.open(item.domain)}
+          >
+            {item.domain}
+          </Text>
+        </Box>
         <Box className="px-4 pt-1 text-blue-600 text-[12px] sm:text-[12px] md:text-[13px] font-[Quicksand,sans-serif] flex items-center color-bluefocus:outline-none">
           <FaCalendarAlt className="text-blue-600" />
           <Text className="ml-3 text-blue-600">
@@ -224,7 +229,7 @@ const ModalInvitation = ({
             {time.minutes} <span style={{ fontSize: "0.7em" }}>Phút</span>
           </Text>
         </Box>
-        <Box className="hidden md:flex mt-6 mb-4 flex-row justify-evenly">
+        <Box className="flex flex-row gap-3 mt-6 mb-4 justify-evenly items-center px-4">
           <Button
             onClick={() => {}}
             className="!bg-red-500 !rounded-[12px] !w-[45%] !h-[35px] !font-semibold !text-[14px] !md:text-[13px] !font-[Quicksand] !hover:bg-red-600 !transition-colors !duration-200"
@@ -247,9 +252,9 @@ const ModalInvitation = ({
       <Box
         className="
           fixed top-1/2 left-1/2
-          bg-white rounded-2xl shadow-xl z-[100001]
-          w-full min-h-[80vh]
+          w-full min-h-[75vh] sm:min-h-[85vh]
           max-w-[95%] sm:max-w-[90%] md:max-w-[85%]
+          bg-white rounded-2xl shadow-xl z-[100001]
         "
         transform="translate(-50%, -50%)"
         onClick={(e) => e.stopPropagation()}
@@ -308,7 +313,7 @@ const ModalInvitation = ({
             ))}
           </Box>
         </Box>
-        <Box my={6} px={4}>
+        <Box my={4} px={4}>
           <HStack align="center">
             <Text className="font-medium font-[Quicksand,sans-serif]">
               Bộ lọc:
@@ -372,22 +377,22 @@ const ModalInvitation = ({
         </Box>
         <HStack wrap="wrap" p={4} pt={0}>
           <Box
-            display="flex"
-            gap={4}
-            w="100%"
-            overflowX="scroll"
-            overflowY="hidden"
-            whiteSpace="nowrap"
+            className="w-full gap-4 max-h-[40vh] overflow-y-auto overflow-x-hidden 
+            md:flex md:flex-row md:gap-4 md:overflow-y-hidden md:overflow-x-scroll md:max-h-[65vh] 
+            block flex-col"
           >
             {loading ? (
-              <Box w="100%" textAlign="center" pt={5} justifyContent={"center"}>
+              <Box className="w-full text-center pt-5 justify-center min-h-[350px]">
                 <Spinner size="lg" color="red.500" />
                 <Text className="mt-4 text-gray-600 text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif]">
                   Đang tải thiệp cưới...
                 </Text>
               </Box>
             ) : filteredInvitations?.length === 0 ? (
-              <Box className="w-full text-center py-10 text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif] text-gray-600">
+              <Box
+                className="w-full flex mt-6 justify-center text-center text-[12px] sm:text-[13px] md:text-[14px] font-[Quicksand,sans-serif] text-gray-600"
+                minH="350px"
+              >
                 Không có thiệp cưới nào được tìm thấy.
               </Box>
             ) : (
