@@ -405,7 +405,7 @@ const ModalGuest = ({
                       <FaUsers />
                       <Text className="ml-2">Danh sách khách mời {}</Text>
                     </Box>
-                    <Box className="max-h-[350px] overflow-y-auto space-y-4 w-[380px] pr-2 mt-4 px-2">
+                    <Box className="max-h-[240px] overflow-y-auto space-y-4 w-[380px] pr-2 mt-4 px-2">
                       {guest.map((item: any, index: number) => (
                         <Box
                           key={index}

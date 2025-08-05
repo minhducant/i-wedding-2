@@ -161,7 +161,7 @@ const AccountPopover = () => {
                   w="full"
                   bg="red.50"
                   colorScheme="red"
-                  // variant="outline"
+                  variant="outline"
                   borderRadius="xl"
                   fontWeight="bold"
                   color="red.500"
