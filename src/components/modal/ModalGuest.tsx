@@ -2,28 +2,22 @@ import {
   Box,
   Table,
   Text,
-  Button,
+  Input,
   HStack,
-  Badge,
   Select,
   Spinner,
-  Dialog,
-  useBreakpointValue,
-  createListCollection,
   useDisclosure,
   UseDisclosureProps,
-  Input,
+  useBreakpointValue,
+  createListCollection,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useState, useEffect } from "react";
-import { FiX, FiTrash2, FiEdit2 } from "react-icons/fi";
-import { FaGift } from "react-icons/fa6";
-import { FaPencil } from "react-icons/fa6";
-import { TbWorld, TbWorldOff } from "react-icons/tb";
 import { BsArrowRepeat } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa6";
-import { FaUsers } from "react-icons/fa6";
+import { FaMale, FaFemale } from "react-icons/fa";
 import { MdFamilyRestroom } from "react-icons/md";
+import { FiX, FiTrash2, FiEdit2 } from "react-icons/fi";
+import { FaGift, FaUsers, FaPlus, FaUsersViewfinder } from "react-icons/fa6";
 
 import apiClient from "@/api/apiClient";
 import { toaster } from "@/components/ui/toaster";
@@ -112,8 +106,8 @@ const ModalGuest = ({
   ];
 
   const guestMap: Record<string, { icon: any; label: string }> = {
-    bride: { icon: "♀️", label: "Cô dâu" },
-    groom: { icon: "♂️", label: "Chú rể" },
+    bride: { icon: <FaFemale />, label: "Cô dâu" },
+    groom: { icon: <FaMale />, label: "Chú rể" },
     both: { icon: "❤︎", label: "Cả hai" },
     family: { icon: <MdFamilyRestroom />, label: "Gia đình" },
     friend: { icon: <FaUsers />, label: "Bạn bè" },
@@ -129,8 +123,8 @@ const ModalGuest = ({
 
   const frameworksGuest = createListCollection({
     items: [
-      { label: "Nhà gái", value: "bride" },
-      { label: "Nhà trai", value: "groom" },
+      { label: "Cô dâu", value: "bride" },
+      { label: "Chú rể", value: "groom" },
       { label: "Cả hai", value: "both" },
       { label: "Gia đình", value: "family" },
       { label: "Bạn bè", value: "friend" },
@@ -145,28 +139,28 @@ const ModalGuest = ({
     {
       label: "Tổng số khách",
       value: guest.length,
-      icon: <FaGift />,
+      icon: <FaUsers />,
       color: "red.400",
       bg: "#ffe5e5",
     },
     {
       label: "Tổng tham gia",
       value: guest.length,
-      icon: <TbWorld />,
+      icon: <FaUsersViewfinder />,
       color: "#912828",
       bg: "#f1eaea",
     },
     {
       label: "Khách nhà Trai",
-      value: guest?.filter((item: any) => item?.guestOf === "Groom").length,
-      icon: <TbWorldOff />,
+      value: guest?.filter((item: any) => item?.guestOf === "groom").length,
+      icon: <FaMale />,
       color: "red.500",
       bg: "#ffe5e5",
     },
     {
       label: "Khách nhà gái",
-      value: guest?.filter((item: any) => item?.guestOf === "Bride").length,
-      icon: <FaPencil />,
+      value: guest?.filter((item: any) => item?.guestOf === "bride").length,
+      icon: <FaFemale />,
       color: "olive",
       bg: "#f1ebe6",
     },
@@ -250,44 +244,64 @@ const ModalGuest = ({
             ))}
           </Box>
         </Box>
-        {/* <Box className="px-4 w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <Box className="px-4 w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 font-[Quicksand,sans-serif]">
           <Input
             placeholder="Tìm kiếm theo tên"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full rounded-md border border-gray-300"
+            className="bg-[#F5EEED] !rounded-xl border border-gray-300 font-[Quicksand] focus:border-red-600 focus:outline-none font-bold"
           />
-          <Select.Root collection={frameworksGuest}>
-            <Select.HiddenSelect />
-            <Select.Control>
-              <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2">
-                <Select.ValueText placeholder="Tất cả" />
-              </Select.Trigger>
-              <Select.IndicatorGroup>
-                <Select.Indicator />
-                <Select.ClearTrigger />
-              </Select.IndicatorGroup>
-            </Select.Control>
-            <Select.Positioner>
-              <Select.Content className="z-[1000] bg-white border shadow-md rounded-md"></Select.Content>
-            </Select.Positioner>
-          </Select.Root>
-          <Select.Root collection={frameworkPages}>
-            <Select.HiddenSelect />
-            <Select.Control>
-              <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2">
-                <Select.ValueText placeholder="Chọn trang" />
-              </Select.Trigger>
-              <Select.IndicatorGroup>
-                <Select.Indicator />
-                <Select.ClearTrigger />
-              </Select.IndicatorGroup>
-            </Select.Control>
-            <Select.Positioner>
-              <Select.Content className="z-[1000] bg-white border shadow-md rounded-md"></Select.Content>
-            </Select.Positioner>
-          </Select.Root>
-        </Box> */}
+          <Box className="grid grid-cols-2 gap-4 md:contents">
+            <Select.Root collection={frameworksGuest}>
+              <Select.HiddenSelect />
+              <Select.Control>
+                <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2 font-bold !rounded-xl">
+                  <Select.ValueText placeholder="Tất cả" />
+                </Select.Trigger>
+                <Select.IndicatorGroup>
+                  <Select.Indicator />
+                  <Select.ClearTrigger />
+                </Select.IndicatorGroup>
+              </Select.Control>
+              <Select.Positioner>
+                <Select.Content className="z-[1000] bg-white border shadow-md rounded-md border border-gray-300 !rounded-xl">
+                  {frameworksGuest.items.map((item: any, index: number) => (
+                    <Select.Item
+                      key={index}
+                      item={item.value}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer font-[Quicksand,sans-serif]"
+                    >
+                      {item.label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Select.Root>
+            <Select.Root collection={frameworkPages}>
+              <Select.HiddenSelect />
+              <Select.Control>
+                <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2 font-bold !rounded-xl" />
+                <Select.IndicatorGroup>
+                  <Select.Indicator />
+                  <Select.ClearTrigger />
+                </Select.IndicatorGroup>
+              </Select.Control>
+              <Select.Positioner>
+                <Select.Content className="z-[1000] bg-white border shadow-md rounded-md border border-gray-300 !rounded-xl">
+                  {frameworkPages.items.map((item: any, index: number) => (
+                    <Select.Item
+                      key={index}
+                      item={item.value}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer font-[Quicksand,sans-serif]"
+                    >
+                      {item.label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Select.Root>
+          </Box>
+        </Box>
         <HStack wrap="wrap" p={4} pt={0}>
           <Box display="flex" gap={4} w="100%" whiteSpace="nowrap">
             {loading ? (
@@ -324,7 +338,7 @@ const ModalGuest = ({
                         </Box>
                       </Table.Header>
                       <Table.Body>
-                        <Box className="bg-[#FEF8F7] border border-gray-200 rounded-b-[16px] min-h-[300px] max-h-[350px] overflow-y-auto">
+                        <Box className="bg-[#FEF8F7] border border-gray-200 rounded-b-[16px] min-h-[300px] max-h-[400px] overflow-y-auto">
                           {guest.map((item: any) => (
                             <Box
                               key={item.id}

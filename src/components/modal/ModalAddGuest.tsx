@@ -8,7 +8,7 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { FiX } from "react-icons/fi";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { keyframes } from "@emotion/react";
 
 import apiClient from "@/api/apiClient";
@@ -36,14 +36,20 @@ const AddGuestDialog = ({
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const guestOfRef = useRef<HTMLInputElement>(null);
   const numberOfPeopleRef = useRef<HTMLInputElement>(null);
-  const [guestOf, setGuestOf] = useState(item?.guestOf || "both");
+  const [guestOf, setGuestOf] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      const defaultValue = item?.guestOf ? [item.guestOf] : [];
+      setGuestOf(defaultValue);
+    }
+  }, [item, open]);
 
   const frameworks = createListCollection({
     items: [
-      { label: "Nhà gái", value: "bride" },
-      { label: "Nhà trai", value: "groom" },
+      { label: "Cô dâu", value: "bride" },
+      { label: "Chú rể", value: "groom" },
       { label: "Cả hai", value: "both" },
       { label: "Gia đình", value: "family" },
       { label: "Bạn bè", value: "friend" },
@@ -54,11 +60,11 @@ const AddGuestDialog = ({
     e.preventDefault();
     const data = {
       ...item,
-      pageId: item.pageId || pageId,
+      pageId: pageId || item.pageId,
+      guestOf: guestOf[0] || item.guestOf,
       phone: phoneRef?.current?.value || "",
       email: emailRef?.current?.value || "",
       fullName: nameRef?.current?.value || "",
-      guestOf: guestOfRef?.current?.value || "",
       numberOfPeople: numberOfPeopleRef?.current?.value || 1,
     };
     try {
@@ -172,7 +178,7 @@ const AddGuestDialog = ({
             <Select.Root
               value={guestOf}
               collection={frameworks}
-              onChange={(val) => setGuestOf(val)}
+              onValueChange={(val) => setGuestOf(val.value)}
             >
               <Select.Control className="!rounded-xl border border-gray-300">
                 <Select.Trigger className="!border-none">
@@ -180,20 +186,21 @@ const AddGuestDialog = ({
                 </Select.Trigger>
                 <Select.IndicatorGroup>
                   <Select.Indicator />
+                  <Select.ClearTrigger />
                 </Select.IndicatorGroup>
               </Select.Control>
-              <Portal>
-                <Select.Positioner>
-                  <Select.Content className="z-[99999]" >
-                    {frameworks.items.map((framework) => (
-                      <Select.Item item={framework} key={framework.value}>
-                        {framework.label}
-                        <Select.ItemIndicator />
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Positioner>
-              </Portal>
+              <Select.Positioner>
+                <Select.Content className="z-[1000] bg-white border shadow-md rounded-md border border-gray-300 !rounded-xl">
+                  {frameworks?.items?.map((item) => (
+                    <Select.Item
+                      item={item?.value}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer font-[Quicksand,sans-serif]"
+                    >
+                      {item.label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
             </Select.Root>
           </Box>
           <Box className="flex flex-row gap-3 mt-6 mb-2 justify-evenly items-center px-2">

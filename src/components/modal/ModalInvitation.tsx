@@ -6,19 +6,26 @@ import {
   HStack,
   Select,
   Spinner,
-  Portal,
   useBreakpointValue,
   createListCollection,
 } from "@chakra-ui/react";
+import {
+  FaUsers,
+  FaEdit,
+  FaCopy,
+  FaUserEdit,
+  FaShareAlt,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import dayjs from "dayjs";
-import { keyframes } from "@emotion/react";
+import { GrView } from "react-icons/gr";
 import { IoLink } from "react-icons/io5";
+import { keyframes } from "@emotion/react";
 import { BsArrowRepeat } from "react-icons/bs";
 import { FaPencil, FaGift } from "react-icons/fa6";
-import { FiMoreVertical, FiX } from "react-icons/fi";
 import { TbWorld, TbWorldOff } from "react-icons/tb";
 import { useState, useEffect, useMemo } from "react";
-import { FaCalendarAlt, FaUsers } from "react-icons/fa";
+import { FiMoreVertical, FiX, FiTrash2 } from "react-icons/fi";
 
 import apiClient from "@/api/apiClient";
 import getTimeDiff from "@/utils/timeSince";
@@ -71,6 +78,41 @@ const ModalInvitation = ({
     }
   };
 
+  const deletePages = async (id: string) => {
+    try {
+      setLoading(true);
+      await apiClient.delete(`/pages/${id}`);
+      fetchInvitations();
+      toaster.create({
+        title: "Xóa thiêp mời thành công",
+        type: "success",
+      });
+    } catch (error) {
+      toaster.create({
+        title: "Lỗi khi xóa thiệp mời",
+        description: "Vui lòng thử lại sau.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toaster.create({
+        title: "Đã copy link thiệp cưới",
+        type: "success",
+      });
+    } catch (err) {
+      toaster.create({
+        title: "Đã có lỗi xảy ra, vui lòng thử lại sau",
+        type: "error",
+      });
+    }
+  };
+
   const filteredInvitations = useMemo(() => {
     switch (selected) {
       case "published":
@@ -94,6 +136,32 @@ const ModalInvitation = ({
       onClick: () => fetchInvitations(),
     },
     { icon: FiX, label: "Đóng", onClick: onClose },
+  ];
+
+  const itemAction = [
+    {
+      icon: GrView,
+      label: "Xen thiệp",
+      onClick: (item: any) => {
+        window.open(item.domain, "_blank");
+      },
+    },
+    { icon: FaEdit, label: "Chỉnh sửa", onClick: (item: any) => {} },
+    {
+      icon: FaShareAlt,
+      label: "Chia sẻ",
+      onClick: (item: any) => {
+        copyToClipboard(item.domain);
+      },
+    },
+    { icon: TbWorldOff, label: "Huỷ xuất bản", onClick: (item: any) => {} },
+    {
+      icon: FaUserEdit,
+      label: "Cập nhật thông tin",
+      onClick: (item: any) => {},
+    },
+    { icon: FaUsers, label: "Quản lý khách mời", onClick: (item: any) => {} },
+    { icon: FaCopy, label: "Tạo bản sao", onClick: (item: any) => {} },
   ];
 
   const filters = [
@@ -140,12 +208,12 @@ const ModalInvitation = ({
     },
   ];
 
-  const InvitationCard = ({ item, key }: { item: any; key: number }) => {
+  const InvitationCard = ({ item, index }: { item: any; index: number }) => {
     const time = getTimeDiff(item.date);
 
     return (
       <Box
-        key={key}
+        key={index}
         className="w-full md:w-[400px] border border-gray-200 rounded-lg bg-[#FEF8F7] shadow-md mb-5 md:mb-0"
       >
         <Box className="p-3 flex items-center rounded-t-2xl">
@@ -169,13 +237,36 @@ const ModalInvitation = ({
                 <FiMoreVertical />
               </Box>
             </Popover.Trigger>
-            <Portal>
-              <Popover.Positioner>
-                <Popover.Content className="!w-[280px] rounded-xl shadow-xl overflow-hidden focus:outline-none">
-                  <Text>Đức</Text>
-                </Popover.Content>
-              </Popover.Positioner>
-            </Portal>
+            <Popover.Positioner>
+              <Popover.Content className="!w-[210px]  bg-white border shadow-md rounded-md border border-gray-300 !rounded-xl p-2 bg-[#FEF8F7]">
+                {itemAction.map(({ icon: Icon, onClick, label }, index) => (
+                  <Box
+                    key={index}
+                    onClick={() => onClick(item)}
+                    className="flex flex-ro text-[14px] sm:text-[14px] md:text-[14px] font-[Quicksand,sans-serif] flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+                  >
+                    <Icon />
+                    <Text className="ml-3">{label}</Text>
+                  </Box>
+                ))}
+                <Box className="h-px bg-gray-200 mx-5 my-1" />
+                <Box
+                  onClick={() => {
+                    if (
+                      confirm(
+                        `Bạn có chắc chắn muốn xóa thiệp mời ${item.title}?`
+                      )
+                    ) {
+                      deletePages(item.id);
+                    }
+                  }}
+                  className="flex flex-row text-[14px] sm:text-[14px] md:text-[14px] font-[Quicksand,sans-serif] items-center p-2 hover:bg-gray-100 cursor-pointer rounded-md text-red-600"
+                >
+                  <FiTrash2 />
+                  <Text className="ml-3">Xoá</Text>
+                </Box>
+              </Popover.Content>
+            </Popover.Positioner>
           </Popover.Root>
         </Box>
         <Box className="flex bg-white p-2 rounded-md mx-3 border border-gray-300 flex flex-row items-center font-[Quicksand] font-bold text-[14px] sm:text-[16px] md:text-[14px]]">
@@ -343,32 +434,28 @@ const ModalInvitation = ({
             ) : (
               <Select.Root
                 collection={filtersMobile}
-                value={selected}
-                defaultValue={["all"]}
-                onValueChange={(val) => setSelected(val)}
                 className="!w-[83%] text-sm font-[Quicksand]"
+                onValueChange={(val) => setSelected(val.value[0])}
               >
                 <Select.HiddenSelect />
-                <Select.Control>
-                  <Select.Trigger>
+                <Select.Control className="!rounded-xl border border-gray-300 font-[Quicksand]">
+                  <Select.Trigger className="!border-none">
                     <Select.ValueText placeholder="Chọn bộ lọc" />
                   </Select.Trigger>
                   <Select.IndicatorGroup>
                     <Select.Indicator />
                   </Select.IndicatorGroup>
                 </Select.Control>
-                <Portal>
-                  <Select.Positioner className="z-[100010]">
-                    <Select.Content>
-                      {filters.map((framework) => (
-                        <Select.Item item={framework} key={framework.value}>
-                          {framework.label}
-                          <Select.ItemIndicator />
-                        </Select.Item>
-                      ))}
-                    </Select.Content>
-                  </Select.Positioner>
-                </Portal>
+                <Select.Positioner>
+                  <Select.Content className="z-[1000] bg-white border shadow-md rounded-md border border-gray-300 !rounded-xl">
+                    {filters.map((framework) => (
+                      <Select.Item item={framework} key={framework.value}>
+                        {framework.label}
+                        <Select.ItemIndicator />
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Positioner>
               </Select.Root>
             )}
           </HStack>
@@ -394,8 +481,12 @@ const ModalInvitation = ({
                 Không có thiệp cưới nào được tìm thấy.
               </Box>
             ) : (
-              filteredInvitations?.map((item: any, idx: any) => (
-                <InvitationCard key={idx} item={item} />
+              filteredInvitations?.map((item: any, index: number) => (
+                <InvitationCard
+                  key={item.id || index}
+                  index={index}
+                  item={item}
+                />
               ))
             )}
           </Box>
