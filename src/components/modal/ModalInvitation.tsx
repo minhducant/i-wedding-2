@@ -248,13 +248,13 @@ const ModalInvitation = ({
   };
 
   return (
-    <Box onClick={onClose} className="fixed inset-0 bg-transparent z-[100001]">
+    <Box onClick={onClose} className="fixed inset-0 bg-transparent]">
       <Box
         className="
           fixed top-1/2 left-1/2
           w-full min-h-[75vh] sm:min-h-[85vh]
           max-w-[95%] sm:max-w-[90%] md:max-w-[85%]
-          bg-white rounded-2xl shadow-xl z-[100001]
+          bg-white rounded-2xl shadow-xl 
         "
         transform="translate(-50%, -50%)"
         onClick={(e) => e.stopPropagation()}
@@ -343,12 +343,10 @@ const ModalInvitation = ({
             ) : (
               <Select.Root
                 collection={filtersMobile}
-                size="sm"
-                width="83%"
                 value={selected}
                 defaultValue={["all"]}
                 onValueChange={(val) => setSelected(val)}
-                fontFamily={'"Quicksand", sans-serif'}
+                className="!w-[83%] text-sm font-[Quicksand]"
               >
                 <Select.HiddenSelect />
                 <Select.Control>
@@ -360,7 +358,7 @@ const ModalInvitation = ({
                   </Select.IndicatorGroup>
                 </Select.Control>
                 <Portal>
-                  <Select.Positioner zIndex={100002}>
+                  <Select.Positioner className="z-[100010]">
                     <Select.Content>
                       {filters.map((framework) => (
                         <Select.Item item={framework} key={framework.value}>

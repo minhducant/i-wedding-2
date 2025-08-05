@@ -180,7 +180,7 @@ export default function FloatingWidget() {
           boxShadow="lg"
           borderRadius="md"
           p={4}
-          zIndex={9999}
+          zIndex={2}
           w={["250px", "270px", "270px"]} 
           className="fixed bottom-[21%] right-[1%]"
           animation={`${

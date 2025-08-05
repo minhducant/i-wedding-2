@@ -7,21 +7,27 @@ import {
   Badge,
   Select,
   Spinner,
+  Dialog,
   useBreakpointValue,
   createListCollection,
+  useDisclosure,
+  UseDisclosureProps,
+  Input,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useState, useEffect } from "react";
-import { FiX, FiCheck } from "react-icons/fi";
-import { FaUsers } from "react-icons/fa";
+import { FiX, FiTrash2, FiEdit2 } from "react-icons/fi";
 import { FaGift } from "react-icons/fa6";
 import { FaPencil } from "react-icons/fa6";
 import { TbWorld, TbWorldOff } from "react-icons/tb";
 import { BsArrowRepeat } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa6";
+import { MdFamilyRestroom } from "react-icons/md";
 
 import apiClient from "@/api/apiClient";
 import { toaster } from "@/components/ui/toaster";
+import AddGuestDialog from "@/components/modal/ModalAddGuest";
 
 const slideIn = keyframes`
   0% { transform: translate(-50%, -60%) scale(0.95); opacity: 0; }
@@ -36,11 +42,19 @@ const ModalGuest = ({
   onClose: () => void;
 }) => {
   if (!open) return null;
-
+  const {
+    open: openAddGuest,
+    onOpen: onOpenAddGuest,
+    onClose: onCloseAddGeuest,
+  }: UseDisclosureProps = useDisclosure();
   const isDesktop = useBreakpointValue({ base: false, md: true });
-  const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState("all");
+  const [page, setPage] = useState(23);
   const [guest, setGuest] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState<any>({});
+  const [searchText, setSearchText] = useState("");
+  const [filterGuestOf, setFilterGuestOf] = useState("");
+  const [filterPageId, setFilterPageId] = useState("23");
 
   useEffect(() => {
     fetchGuest();
@@ -51,7 +65,8 @@ const ModalGuest = ({
       setLoading(true);
       const response = await apiClient.get("/guests", {
         params: {
-          guestOf: type || "both",
+          // guestOf: type || "both",
+          pageId: page,
         },
       });
       setGuest(response.data.data.data);
@@ -66,8 +81,28 @@ const ModalGuest = ({
     }
   };
 
+  const deleteGuest = async (id: string) => {
+    try {
+      setLoading(true);
+      await apiClient.delete(`/guests/${id}`);
+      fetchGuest();
+      toaster.create({
+        title: "Xóa khách mời thành công",
+        type: "success",
+      });
+    } catch (error) {
+      toaster.create({
+        title: "Lỗi khi xóa khách mời",
+        description: "Vui lòng thử lại sau.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const iconList = [
-    { icon: FaPlus, label: "Thêm mới" },
+    { icon: FaPlus, label: "Thêm mới", onClick: onOpenAddGuest },
     {
       icon: BsArrowRepeat,
       label: "Làm mới dữ liệu",
@@ -75,6 +110,36 @@ const ModalGuest = ({
     },
     { icon: FiX, label: "Đóng", onClick: onClose },
   ];
+
+  const guestMap: Record<string, { icon: any; label: string }> = {
+    bride: { icon: "♀️", label: "Cô dâu" },
+    groom: { icon: "♂️", label: "Chú rể" },
+    both: { icon: "❤︎", label: "Cả hai" },
+    family: { icon: <MdFamilyRestroom />, label: "Gia đình" },
+    friend: { icon: <FaUsers />, label: "Bạn bè" },
+  };
+
+  const guestStyleMap: Record<string, string> = {
+    bride: "bg-[#F1EDEA] text-[#B09287] border border-[#D4C4BC]",
+    groom: "bg-[#E6F0F6] text-[#5C9DB3] border border-[#B3D1DE]",
+    both: "bg-[#FCEAEA] text-[#EF6C6C] border border-[#FBC4C4]",
+    family: "bg-[#FFF4E5] text-[#D48C00] border border-[#FFD8A8]",
+    friend: "bg-[#EAF4FF] text-[#4A90E2] border border-[#B6D9FF]",
+  };
+
+  const frameworksGuest = createListCollection({
+    items: [
+      { label: "Nhà gái", value: "bride" },
+      { label: "Nhà trai", value: "groom" },
+      { label: "Cả hai", value: "both" },
+      { label: "Gia đình", value: "family" },
+      { label: "Bạn bè", value: "friend" },
+    ],
+  });
+
+  const frameworkPages = createListCollection({
+    items: [],
+  });
 
   const headerAction = [
     {
@@ -108,13 +173,23 @@ const ModalGuest = ({
   ];
 
   return (
-    <Box onClick={onClose} className="fixed inset-0 bg-transparent z-[100001]">
+    <Box className="fixed inset-0 bg-transparent">
+      <AddGuestDialog
+        item={selectedGuest}
+        pageId={page}
+        open={openAddGuest}
+        fetchGuest={fetchGuest}
+        onClose={() => {
+          setSelectedGuest({});
+          onCloseAddGeuest();
+        }}
+      />
       <Box
         className="
           fixed top-1/2 left-1/2
           w-full min-h-[75vh] sm:min-h-[85vh]
-          max-w-[95%] sm:max-w-[90%] md:max-w-[85%]
-          bg-white rounded-2xl shadow-xl z-[100001]
+          max-w-full sm:max-w-[90%] md:max-w-[85%]
+          bg-white rounded-2xl shadow-xl
         "
         transform="translate(-50%, -50%)"
         onClick={(e) => e.stopPropagation()}
@@ -175,15 +250,46 @@ const ModalGuest = ({
             ))}
           </Box>
         </Box>
+        {/* <Box className="px-4 w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input
+            placeholder="Tìm kiếm theo tên"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="w-full rounded-md border border-gray-300"
+          />
+          <Select.Root collection={frameworksGuest}>
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2">
+                <Select.ValueText placeholder="Tất cả" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+                <Select.ClearTrigger />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Select.Positioner>
+              <Select.Content className="z-[1000] bg-white border shadow-md rounded-md"></Select.Content>
+            </Select.Positioner>
+          </Select.Root>
+          <Select.Root collection={frameworkPages}>
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger className="w-full border border-gray-300 rounded-md px-3 py-2">
+                <Select.ValueText placeholder="Chọn trang" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+                <Select.ClearTrigger />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Select.Positioner>
+              <Select.Content className="z-[1000] bg-white border shadow-md rounded-md"></Select.Content>
+            </Select.Positioner>
+          </Select.Root>
+        </Box> */}
         <HStack wrap="wrap" p={4} pt={0}>
-          <Box
-            display="flex"
-            gap={4}
-            w="100%"
-            overflowX="scroll"
-            overflowY="hidden"
-            whiteSpace="nowrap"
-          >
+          <Box display="flex" gap={4} w="100%" whiteSpace="nowrap">
             {loading ? (
               <Box className="w-full text-center pt-5 justify-center min-h-[350px]">
                 <Spinner size="lg" color="red.500" />
@@ -201,21 +307,145 @@ const ModalGuest = ({
             ) : (
               <Box>
                 {isDesktop ? (
-                  <Table.Root size="sm">
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.ColumnHeader>Tên</Table.ColumnHeader>
-                        <Table.ColumnHeader>Số điện thoại</Table.ColumnHeader>
-                        <Table.ColumnHeader>Email</Table.ColumnHeader>
-                        <Table.ColumnHeader>Khách của</Table.ColumnHeader>
-                        <Table.ColumnHeader>Số người</Table.ColumnHeader>
-                        <Table.ColumnHeader textAlign="end"></Table.ColumnHeader>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body></Table.Body>
-                  </Table.Root>
+                  <Box w="100%" overflowX="auto">
+                    <Table.Root className="w-full min-w-[1600px] border-collapse text-sm">
+                      <Table.Header>
+                        <Box
+                          className="bg-[#FFE5E5] border border-gray-200 border-b-2 border-b-[#FF8D8D]
+                            rounded-t-[16px] grid grid-cols-6 gap-4 px-[30px] py-4 text-center
+                            text-[#912828] text-[14px] font-bold font-[Quicksand]"
+                        >
+                          <Text>Tên</Text>
+                          <Text>Số điện thoại</Text>
+                          <Text>Email</Text>
+                          <Text>Khách của</Text>
+                          <Text>Số người</Text>
+                          <Text> </Text>
+                        </Box>
+                      </Table.Header>
+                      <Table.Body>
+                        <Box className="bg-[#FEF8F7] border border-gray-200 rounded-b-[16px] min-h-[300px] max-h-[350px] overflow-y-auto">
+                          {guest.map((item: any) => (
+                            <Box
+                              key={item.id}
+                              className="grid grid-cols-6 gap-4 items-center px-[30px] py-3 border-b border-gray-200 last:border-b-0 text-[14px] font-[Quicksand,sans-serif] text-center"
+                            >
+                              <Text className="font-bold">{item.fullName}</Text>
+                              <Text>{item.phone || "Chưa có"}</Text>
+                              <Text>{item.email || "Chưa có"}</Text>
+                              <Box
+                                className={`flex items-center justify-center w-[130px] h-full px-3 py-1 rounded-full text-sm font-semibold ml-[60px] ${
+                                  guestStyleMap[item?.guestOf] ??
+                                  "bg-gray-100 text-gray-500 border border-gray-300"
+                                }`}
+                              >
+                                <span className="mr-2">
+                                  {guestMap[item?.guestOf]?.icon}
+                                </span>
+                                {guestMap[item?.guestOf]?.label}
+                              </Box>
+                              <Box className="flex items-center justify-center gap-1 font-bold">
+                                <FaUsers />
+                                <Text className="ml-1">
+                                  {item.numberOfPeople || 1}
+                                </Text>
+                              </Box>
+                              <HStack className="justify-end">
+                                <Box
+                                  className="cursor-pointer text-red-500 hover:text-red-700 bg-[#EAD3D2] p-2 rounded-md"
+                                  onClick={() => {
+                                    setSelectedGuest(item);
+                                    onOpenAddGuest();
+                                  }}
+                                >
+                                  <FiEdit2 />
+                                </Box>
+                                <Box
+                                  className="cursor-pointer text-red-500 hover:text-red-700 bg-[#EAD3D2] p-2 rounded-md ml-2"
+                                  onClick={() => {
+                                    if (
+                                      confirm(
+                                        `Bạn có chắc chắn muốn xóa khách mời ${item.fullName}?`
+                                      )
+                                    ) {
+                                      deleteGuest(item.id);
+                                    }
+                                  }}
+                                >
+                                  <FiTrash2 />
+                                </Box>
+                              </HStack>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Table.Body>
+                    </Table.Root>
+                  </Box>
                 ) : (
-                  <Box></Box>
+                  <Box>
+                    <Box
+                      className="bg-[#FFE5E5] border border-gray-200 border-b-2 border-b-[#FF8D8D] 
+                        rounded-t-[16px] text-[#912828] text-[16px] font-bold font-[Quicksand] 
+                        py-2 px-5 flex items-center gap-2"
+                    >
+                      <FaUsers />
+                      <Text className="ml-2">Danh sách khách mời {}</Text>
+                    </Box>
+                    <Box className="max-h-[350px] overflow-y-auto space-y-4 w-[380px] pr-2 mt-4 px-2">
+                      {guest.map((item: any, index: number) => (
+                        <Box
+                          key={index}
+                          className="rounded-xl border border-gray-300 p-4 shadow-md bg-[#FEF8F7] w-full"
+                        >
+                          <Text className="text-lg font-bold mb-2">
+                            {item.fullName}
+                          </Text>
+                          <Text className="text-sm text-gray-600">
+                            📞 {item.phone || "Chưa có"}
+                          </Text>
+                          <Text className="text-sm text-gray-600">
+                            📧 {item.email || "Chưa có"}
+                          </Text>
+                          <Box
+                            className={`inline-flex items-center mt-2 px-3 py-1 rounded-full text-sm font-semibold ${
+                              guestStyleMap[item?.guestOf] ??
+                              "bg-gray-100 text-gray-500 border border-gray-300"
+                            }`}
+                          >
+                            <span className="mr-2">
+                              {guestMap[item?.guestOf]?.icon}
+                            </span>
+                            {guestMap[item?.guestOf]?.label}
+                          </Box>
+                          <HStack className="justify-center mt-4">
+                            <Box
+                              className="cursor-pointer text-red-500 hover:text-red-700 bg-[#EAD3D2] p-2 rounded-md"
+                              onClick={() => {
+                                setSelectedGuest(item);
+                                onOpenAddGuest();
+                              }}
+                            >
+                              <FiEdit2 />
+                            </Box>
+                            <Box
+                              className="cursor-pointer text-red-500 hover:text-red-700 bg-[#EAD3D2] p-2 rounded-md ml-2"
+                              onClick={() => {
+                                if (
+                                  confirm(
+                                    `Bạn có chắc chắn muốn xóa khách mời ${item.fullName}?`
+                                  )
+                                ) {
+                                  deleteGuest(item.id);
+                                }
+                              }}
+                            >
+                              <FiTrash2 />
+                            </Box>
+                          </HStack>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
                 )}
               </Box>
             )}

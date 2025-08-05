@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import apiClient from "../../api/apiClient";
-import { Auth, signIn, signOut } from "./authSlice";
+import { Auth, setPages, signIn, signOut } from "./authSlice";
 
 export interface SignMessageData {
   username: string;
@@ -34,6 +34,22 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["auth"] });
       dispatch(signOut());
+    },
+  });
+};
+
+export const useGetPages = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  return useMutation<any, Error, void>({
+    mutationFn: async (data) => {
+      const response = await apiClient.get("/pages/me");
+      return response.data.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["pages"] });
+      dispatch(setPages(data));
     },
   });
 };

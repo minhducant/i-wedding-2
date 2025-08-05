@@ -35,7 +35,7 @@ const CreateFreeCardsHeader = () => {
 
   return (
     <>
-      <Box className="fixed left-0 right-0 top-0 z-99999 bg-white">
+      <Box className="fixed left-0 right-0 top-0 z-[9999] bg-white">
         <Container maxW={"6xl"} className="h-[51px]">
           <Box className="flex justify-between items-center h-full">
             <Box className="flex items-center gap-1">
