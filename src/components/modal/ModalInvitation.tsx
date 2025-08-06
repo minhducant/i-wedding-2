@@ -48,7 +48,6 @@ const ModalInvitation = ({
   onClose: () => void;
   onOpenGuest?: () => void;
 }) => {
-  if (!open) return null;
   const isDesktop = useBreakpointValue({ base: false, md: true });
   const [selected, setSelected] = useState<any>("all");
   const { invitations, loading, refetch, setLoading } = useInvitations();
@@ -317,6 +316,8 @@ const ModalInvitation = ({
       </Box>
     );
   };
+
+  if (!open) return null;
 
   return (
     <Box onClick={onClose} className="fixed inset-0 bg-transparent]">

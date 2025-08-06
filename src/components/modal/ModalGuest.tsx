@@ -37,7 +37,6 @@ const ModalGuest = ({
   open: boolean;
   onClose: () => void;
 }) => {
-  if (!open) return null;
   const {
     open: openAddGuest,
     onOpen: onOpenAddGuest,
@@ -172,6 +171,8 @@ const ModalGuest = ({
       bg: "#f1ebe6",
     },
   ];
+
+  if (!open) return null;
 
   return (
     <Box className="fixed inset-0 bg-transparent">
