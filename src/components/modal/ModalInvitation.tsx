@@ -20,11 +20,11 @@ import {
 import dayjs from "dayjs";
 import { GrView } from "react-icons/gr";
 import { IoLink } from "react-icons/io5";
+import { useState, useMemo } from "react";
 import { keyframes } from "@emotion/react";
 import { BsArrowRepeat } from "react-icons/bs";
 import { FaPencil, FaGift } from "react-icons/fa6";
 import { TbWorld, TbWorldOff } from "react-icons/tb";
-import { useState, useEffect, useMemo } from "react";
 import { FiMoreVertical, FiX, FiTrash2 } from "react-icons/fi";
 
 import apiClient from "@/api/apiClient";
@@ -32,6 +32,7 @@ import getTimeDiff from "@/utils/timeSince";
 import GroomIcon from "@/assets/icons/groom";
 import BrideIcon from "@/assets/icons/bride";
 import { toaster } from "@/components/ui/toaster";
+import { useInvitations } from "@/utils/useInvitations";
 
 const slideIn = keyframes`
 0% { transform: translate(-50%, -60%) scale(0.95); opacity: 0; }
@@ -49,40 +50,19 @@ const ModalInvitation = ({
 }) => {
   if (!open) return null;
   const isDesktop = useBreakpointValue({ base: false, md: true });
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<any>("all");
-  const [invitations, setInvitations] = useState<any>([]);
-
-  useEffect(() => {
-    fetchInvitations();
-  }, []);
+  const { invitations, loading, refetch, setLoading } = useInvitations();
 
   const openGuestModal = async () => {
     onClose?.();
     onOpenGuest?.();
-  };
-  const fetchInvitations = async (type?: string) => {
-    try {
-      setLoading(true);
-      const response = await apiClient.get("/pages/me");
-      setInvitations(response.data.data);
-    } catch (error) {
-      toaster.create({
-        title: "Lỗi khi tải thiệp cưới",
-        description:
-          "Không thể tải danh sách thiệp cưới. Vui lòng thử lại sau.",
-        type: "error",
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   const deletePages = async (id: string) => {
     try {
       setLoading(true);
       await apiClient.delete(`/pages/${id}`);
-      fetchInvitations();
+      refetch();
       toaster.create({
         title: "Xóa thiêp mời thành công",
         type: "success",
@@ -133,7 +113,7 @@ const ModalInvitation = ({
     {
       icon: BsArrowRepeat,
       label: "Làm mới dữ liệu",
-      onClick: () => fetchInvitations(),
+      onClick: () => refetch(),
     },
     { icon: FiX, label: "Đóng", onClick: onClose },
   ];
